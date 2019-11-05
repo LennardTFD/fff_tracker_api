@@ -66,8 +66,8 @@ function createMarchLocation(march) {
     const d = new Date(lastUpdate);
     const formatedLastUpdate = d.getHours() + ":" + d.getMinutes();
     const name = march.name;
-    //const color = marches[marchIds[i]].color;
-    const color = "violet";
+    const color = marches[marchIds[i]].color;
+    //const color = "violet";
     const location = march.latlng;
     const mapsUrl = "https://maps.google.com/?q=" + location[0] + "," + location[1];
     let marker = L.marker(location, {icon: eval(color+"Icon")}).addTo(map);
@@ -86,7 +86,7 @@ function drawRouteByCoords(route) {
     let name = route.name;
     let color = route.color;
     let descriptionStart = route.description;
-    let descriptionEnd = route.description;
+    let descriptionEnd = route.descriptionEnd;
     let pois = route.pois;
 
     var routeWay = new L.Polyline(checkpoints, {

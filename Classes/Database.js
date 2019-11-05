@@ -90,7 +90,7 @@ class Database {
     }
 
 
-    async createRoute(name, description, color, checkpoints, routingPoints, pois)
+    async createRoute(name, description, descriptionEnd, color, checkpoints, routingPoints, pois)
     {
 
         //POIS: {latlng: [lat, lng], title: "Zwischenkundgebung", description: "Kurze Beschreibung"}
@@ -98,6 +98,7 @@ class Database {
             _id: await this.nextId(DB.ROUTES),
             name: name,
             description: description,
+            descriptionEnd: descriptionEnd,
             color: color,
             checkpoints: checkpoints,
             routingPoints: routingPoints,
