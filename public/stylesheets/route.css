@@ -1,0 +1,63 @@
+body {
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+#overlay {
+  pointer-events: auto;
+  height: 30%;
+  width: 20%;
+  position: fixed;
+  top: 30px;
+  right: 15px;
+  z-index: 99999;
+  background-color: transparent;
+}
+#overlay3 {
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  z-index: 9999999;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+}
+
+html, #map {
+  height: 100%;
+  width: 100%;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#routeCreator {
+  grid-area: edit;
+  border: 1px solid black;
+  border-radius: 20px 20px 20px 20px;
+  padding: 15px;
+  background-color: white;
+}
+
+#routeCreator * {
+  width: 100%;
+}
+
+#routeCreator .poi
+{
+  border: 1px solid black;
+  padding: 5px;
+}
+
+#routeCreator .poi *
+{
+  width: 25%;
+}
