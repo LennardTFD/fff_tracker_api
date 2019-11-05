@@ -80,6 +80,7 @@ router.post('/march/:marchId/location', async function (req, res, next) {
     let marchId = parseInt(req.params.marchId);
     let lat = parseFloat(req.body.lat);
     let lng = parseFloat(req.body.lng);
+    res.type("json");
     if ((lat == undefined || typeof lat != "number") || (lng == undefined || typeof lng != "number") || (marchId == undefined || typeof marchId != "number")) {
         res.status(400);
         res.send({msg: "Faulty Parameters"});
@@ -110,6 +111,32 @@ router.get('/route/:routeId', async function (req, res, next) {
     res.send(await db.connect().then(async () => {
         return await db.getRouteById(parseInt(req.params.routeId));
     }));
+});
+
+//Get route by routeId
+router.post('/route/:routeId/status/:status', async function (req, res, next) {
+    let status = req.params.status;
+    if(status == "true")
+    {
+        status = true;
+    } else if(status == "false")
+    {
+        status = false
+    }
+    else
+    {
+        console.log("invalid");
+        res.status(400);
+        res.type("json");
+        res.send({msg: "invalid status"});
+    }
+
+    res.status(200);
+    res.type("json");
+    await db.connect().then(async () => {
+        return await db.setRouteStatus(parseInt(req.params.routeId), status);
+    })
+    res.send({msg: "success"});
 });
 
 //Create route

@@ -1,41 +1,49 @@
 <!DOCTYPE html>
 <html style="height: 100%;">
 <head>
-  <title>FFF Demo Tracker</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel='stylesheet' href='/stylesheets/route.css' />
-  <!--<script src="/socket.io/socket.io.js"></script>-->
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  </head>
+    <title>FFF Demo Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='/stylesheets/route.css'/>
+    <!--<script src="/socket.io/socket.io.js"></script>-->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
 <body style="height: 100%; min-height: 100%;">
 <%
-  let keys = Object.keys(routes);
-  if(keys.length < 1)
-  {
-    %>
+let keys = Object.keys(routes);
+if(keys.length < 1)
+{
+%>
     <h3>Keine Routen vorhanden</h3>
-      <%
-  }
+<%
+}
 for(let i = 0; i < keys.length; i++)
 {
-  let route = routes[keys[i]];
-  let name = route.name;
-  let descripition = route.description;
-  let checkpoints = route.checkpoints;
-  let routingponts = route.routingpoints;
-  let pois = route.pois;
-  let color = route.color;
-  let active = route.active;
+    let route = routes[keys[i]];
+    let name = route.name;
+    let descripition = route.description;
+    let checkpoints = route.checkpoints;
+    let routingponts = route.routingpoints;
+    let pois = route.pois;
+    let color = route.color;
+    let active = route.active;
 %>
-  <div id="route_<% route._id %>" class="routeItem">
-    <h3 class="routeTitle"><% name %></h3>
-    <p class="routeDescription"><% descripition %></p>
-    <input type="color" class="routeColor" value="<% color %>">
-    <input type="checkbox" class="routeActive" value="<% active %>">
-  </div>
+<div id="route_<%= route._id %>" class="routeItem">
+    <h4 class="routeTitle"><%= name %></h4>
+    <input type="button" value="Aktivieren" onclick="updateStatus('<%= route._id %>', true)">
+    <input type="button" value="Deaktivieren" onclick="updateStatus('<%= route._id %>', false)">
+</div>
 <%
 }
 %>
 <button onclick="document.location.href = '/admin/create'">Neue Route</button>
+<script>
+    function updateStatus(routeId, status) {
+        routeId = parseInt(routeId);
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/route/' + routeId + '/status/' + status);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.send();
+    }
+</script>
 </body>
 </html>

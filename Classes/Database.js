@@ -89,6 +89,11 @@ class Database {
         return route[0];
     }
 
+    async setRouteStatus(routeId, status)
+    {
+        await this.db.collection(DB.ROUTES).updateOne({_id: routeId}, {$set: {active: status}});
+    }
+
 
     async createRoute(name, description, descriptionEnd, color, checkpoints, routingPoints, pois)
     {

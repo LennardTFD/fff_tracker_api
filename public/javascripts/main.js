@@ -36,7 +36,7 @@ async function init()
         for(let i = 0; i < routeIds.length; i++)
         {
             const active = routes[routeIds[i]].active;
-            if(active)
+            if(active === true)
             {
                 //drawRouteByCoords(routes[routeIds[i]]);
                 $.ajax({
@@ -66,7 +66,7 @@ function createMarchLocation(march) {
     const d = new Date(lastUpdate);
     const formatedLastUpdate = d.getHours() + ":" + d.getMinutes();
     const name = march.name;
-    const color = marches[marchIds[i]].color;
+    const color = march.color;
     //const color = "violet";
     const location = march.latlng;
     const mapsUrl = "https://maps.google.com/?q=" + location[0] + "," + location[1];
@@ -111,7 +111,7 @@ function drawRouteByCoords(route) {
     startMarker.bindPopup("<b>Start</b><br><p>" + descriptionStart + "</p><a target='_blank' href='" + mapsUrlStart + "' style='vertical-align: middle;'><img src=\"https://img.icons8.com/color/48/000000/google-maps.png\" style='width: 22px;vertical-align: middle;'>Navigation starten</a>").openPopup();
     const mapsUrlEnd = "https://maps.google.com/?q=" + checkpoints[checkpoints.length - 1][0] + "," + checkpoints[checkpoints.length - 1][1];
     let endMarker = L.marker(checkpoints[checkpoints.length - 1], {icon: redIcon}).addTo(map);
-    endMarker.bindPopup("<b>Ende</b><br><p>" + descriptionEnd + "</p><img src=\"https://img.icons8.com/color/48/000000/google-maps.png\" style='width: 22px;vertical-align: middle;'><a target='_blank' href='" + mapsUrlEnd + "' style='vertical-align: middle;'>Navigation starten</a>").openPopup();
+    endMarker.bindPopup("<b>Ende</b><br><p>" + descriptionEnd + "</p><img src=\"https://img.icons8.com/color/48/000000/google-maps.png\" style='width: 22px;vertical-align: middle;'><a target='_blank' href='" + mapsUrlEnd + "' style='vertical-align: middle;'>Navigation starten</a>");
 }
 
 init();
