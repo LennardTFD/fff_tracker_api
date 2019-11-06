@@ -8,6 +8,8 @@ let route;
 let control;
 let poiMarkers = {};
 
+let colors = ["red", "green", "blue", "violet", "grey", "black", "yellow", "orange"];
+
 //Colorize Background of Color Select
 $("#routeColorInput").on("change", (e) => {
     $("#routeColorInput").css("background-color", $("#routeColorInput").val());
@@ -144,6 +146,8 @@ function saveRoute() {
     let pois = [];
     let routingPoints = pathPoints;
 
+    var errorMsg = "";
+
     if(isValid(title) && isValid(description) && isValid(color))
     {
         $("#pois").find(".poi").each((e, t) => {
@@ -158,18 +162,25 @@ function saveRoute() {
         });
     }
 
-    var data = {name: title, description: description, descriptionEnd: descriptionEnd, color: color, pois: pois, routingpoints: routingPoints, checkpoints: checkpoints};
-    //console.log(data);
+    if(title.length < 3)
+    {
+        errorMsg += "Der Routen Name ist zu kurz\n";
+    }
+    if(routingPoints.length < 2)
+    {
+        errorMsg += "Nicht genug Routen Punkte vorhanden\n";
+    }
+    if(!colors.includes(color)){
+        errorMsg += "Kein gültige Routen Farbe\n";
+    }
 
-    /*
-    $.ajax({
-        type: "POST",
-        url: "/api/create/route",
-        data: data,
-        success: () => {console.log("Success")},
-        error: (e) => {console.log(e)}
-    });
-     */
+    if(errorMsg.length > 0)
+    {
+        alert(errorMsg);
+        return;
+    }
+
+    var data = {name: title, description: description, descriptionEnd: descriptionEnd, color: color, pois: pois, routingpoints: routingPoints, checkpoints: checkpoints};
 
     // 1. Create a new XMLHttpRequest object
     let xhr = new XMLHttpRequest();
@@ -180,5 +191,7 @@ function saveRoute() {
     // 3. Send the request over the network
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send("route=" + JSON.stringify(data));
+
+    alert("Route gespeichert!");
 
 }

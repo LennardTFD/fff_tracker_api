@@ -29,8 +29,8 @@ for(let i = 0; i < keys.length; i++)
 %>
 <div id="route_<%= route._id %>" class="routeItem">
     <h4 class="routeTitle"><%= name %></h4>
-    <input type="button" value="Aktivieren" onclick="updateStatus('<%= route._id %>', true)">
-    <input type="button" value="Deaktivieren" onclick="updateStatus('<%= route._id %>', false)">
+    <input type="button" <%= active ? "class=active" : ""%> value="Aktivieren" onclick="updateStatus('<%= route._id %>', true)">
+    <input type="button" <%= !active ? "class=active" : ""%> value="Deaktivieren" onclick="updateStatus('<%= route._id %>', false)">
     <input type="button" value="Löschen" onclick="deleteRoute('<%= route._id %>')">
 </div>
 <%
@@ -53,6 +53,19 @@ for(let i = 0; i < keys.length; i++)
     }
 
     function updateStatus(routeId, status) {
+        var span = $("#route_" + routeId);
+        if(status == true)
+        {
+            console.log("adding 'aktivieren', removing 'dekativieren'");
+            span.find("input[value='Aktivieren']:eq(0)").addClass("active");
+            span.find("input[value='Deaktivieren']:eq(0)").removeClass("active");
+        } else
+        {
+            console.log("removing 'aktivieren', adding 'dekativieren'");
+
+            span.find("input[value='Deaktivieren']:eq(0)").addClass("active");
+            span.find("input[value='Aktivieren']:eq(0)").removeClass("active");
+        }
         routeId = parseInt(routeId);
         let xhr = new XMLHttpRequest();
         xhr.open('POST', '/api/route/' + routeId + '/status/' + status);
