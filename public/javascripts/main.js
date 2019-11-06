@@ -93,9 +93,16 @@ function drawRouteByCoords(route) {
         color: color,
         weight: 6,
         opacity: 0.8,
-        smoothFactor: 2
+        smoothFactor: 2,
     });
     routeWay.addTo(map);
+
+    let decorator = L.polylineDecorator(routeWay, {
+        patterns: [
+            // defines a pattern of 10px-wide dashes, repeated every 20px on the line
+            {offset: 5, repeat: 100, symbol: L.Symbol.arrowHead({pixelSize: 10,  polygon: false, pathOptions: {stroke: true, color: "black"}})}
+        ]
+    }).addTo(map);
 
 
     for(let i = 0; i < pois.length; i++)

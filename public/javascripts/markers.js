@@ -69,3 +69,10 @@ var blackIcon = new L.Icon({
     popupAnchor: [1, -34],
     shadowSize: [41, 41]
 });
+
+new L.divIcon({
+    className : "arrowIcon",
+    iconSize: new L.Point(30,30),
+    iconAnchor: new L.Point(15,15),
+    html : "<div style = 'font-size: 20px; -webkit-transform: rotate("+ angle +"deg)'>&#10152;</div>"
+});
