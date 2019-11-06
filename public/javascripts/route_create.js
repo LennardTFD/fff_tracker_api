@@ -6,6 +6,7 @@ let pathPoints = [];
 let checkpoints = [];
 let route;
 let control;
+let poiMarkers = {};
 
 //Colorize Background of Color Select
 $("#routeColorInput").on("change", (e) => {
@@ -16,43 +17,7 @@ map.on('click', function(e){
     createRoutingPoint(e);
 });
 
-/*
-function calcRoute() {
-    if (control != null) {
-        map.removeControl(control);
-        control = null;
-        console.log(routingPoints);
-    }
 
-    if(routingPoints.length < 2) return;
-
-    var routingPositions = [];
-    for(let i = 0; i < routingPoints.length; i++)
-    {
-        routingPositions.push(routingPoints[i]._latlng);
-    }
-    control = L.Routing.control(L.extend({
-        waypoints: routingPositions,
-        geocoder: L.Control.Geocoder.nominatim(),
-        router: new L.Routing.OpenRouteService('58d904a497c67e00015b45fc4f1ca5bb772b4a179eb9de97a5f03f5e', {profile: "foot-walking"}),
-        routeWhileDragging: false,
-        reverseWaypoints: true,
-        showAlternatives: false,
-        createMarker: () => {return null},
-        lineOptions: {
-            styles: [{color: $("#routeColorInput").val(),
-            opacity: 1,
-            weight: 5}]
-        },
-        routeLine: function (r) {
-            var line = L.Routing.line(r);
-            //console.log(line._route.coordinates);
-            return line;
-        }
-    })).addTo(map);
-}
-
- */
 
 
 async function calcRoute() {
@@ -133,10 +98,11 @@ function deleteRoutingPoint(marker) {
 //Create POI Marker on Map
 //Create new Inputs in Route editor
 function addPoi(name = undefined, description = undefined, location = undefined) {
+    let id = (new Date()).getTime();
     if(name == undefined && description == undefined && location == undefined)
     {
         var marker = L.marker(map.getCenter(), {icon: blackIcon, draggable: true}).addTo(map);
-        var content = "<span class='poi'>POI Name:<input placeholder='POI Name' class='poiName'>POI Beschreibung:<input placeholder='POI Beschreibung' class='poiDescription'></span>";
+        var content = "<span id='" + id + "' class='poi'>POI Name:<input placeholder='POI Name' class='poiName'>POI Beschreibung:<input placeholder='POI Beschreibung' class='poiDescription'><input type='button' onclick='removePoi(" + id + ")'></span>";
     }
     else
     {
@@ -151,10 +117,13 @@ function addPoi(name = undefined, description = undefined, location = undefined)
         $(content).attr("lat", marker.getLatLng().lat);
         $(content).attr("lng", marker.getLatLng().lng);
     });
+
+    poiMarkers[id] = marker;
 }
 
 function removePoi(poiId) {
-    
+    $("#" + poiId).remove();
+    map.removeLayer(poiMarkers[poiId]);
 }
 
 function isValid(value) {

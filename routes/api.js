@@ -179,9 +179,10 @@ router.post('/create/march/', async function (req, res, next) {
 router.post('/delete/route/:routeId', async function (req, res, next) {
     res.status(200);
     res.type("json");
-    res.send(await db.connect().then(async () => {
+    await db.connect().then(async () => {
         return await db.deleteRoute(parseInt(req.params.routeId));
-    }));
+    });
+    res.send({msg: "success"});
 });
 
 //Delete march

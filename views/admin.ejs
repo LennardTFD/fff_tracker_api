@@ -31,12 +31,27 @@ for(let i = 0; i < keys.length; i++)
     <h4 class="routeTitle"><%= name %></h4>
     <input type="button" value="Aktivieren" onclick="updateStatus('<%= route._id %>', true)">
     <input type="button" value="Deaktivieren" onclick="updateStatus('<%= route._id %>', false)">
+    <input type="button" value="Löschen" onclick="deleteRoute('<%= route._id %>')">
 </div>
 <%
 }
 %>
 <button onclick="document.location.href = '/admin/create'">Neue Route</button>
 <script>
+
+    function deleteRoute(routeId) {
+
+        if (!confirm("Route wirklich löschen?")) return;
+
+        routeId = parseInt(routeId);
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/delete/route/' + routeId);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.send();
+
+        $("#route_" + routeId).remove();
+    }
+
     function updateStatus(routeId, status) {
         routeId = parseInt(routeId);
         let xhr = new XMLHttpRequest();
