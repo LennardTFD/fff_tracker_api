@@ -104,12 +104,12 @@ function addPoi(name = undefined, description = undefined, location = undefined)
     if(name == undefined && description == undefined && location == undefined)
     {
         var marker = L.marker(map.getCenter(), {icon: blackIcon, draggable: true}).addTo(map);
-        var content = "<span id='" + id + "' class='poi'>POI Name:<input placeholder='POI Name' class='poiName'>POI Beschreibung:<input placeholder='POI Beschreibung' class='poiDescription'><input type='button' onclick='removePoi(" + id + ")'></span>";
+        var content = "<span id='" + id + "' class='poi'>POI Name:<input placeholder='POI Name' class='poiName'>POI Beschreibung:<input placeholder='POI Beschreibung' class='poiDescription'><input type='button' onclick='removePoi(" + id + ")' value='Entfernen'></span>";
     }
     else
     {
         var marker = L.marker(location, {icon: blackIcon, draggable: true}).addTo(map);
-        var content = "<span id='" + id + "' class='poi'>POI Name:<input placeholder='POI Name' class='poiName' value='" + name + "'>POI Beschreibung:<input placeholder='POI Beschreibung' class='poiDescription' value='" + description + "'><input type='button' onclick='removePoi(" + id + ")'></span>";
+        var content = "<span id='" + id + "' class='poi'>POI Name:<input placeholder='POI Name' class='poiName' value='" + name + "'>POI Beschreibung:<input placeholder='POI Beschreibung' class='poiDescription' value='" + description + "'><input type='button' onclick='removePoi(" + id + ")' value='Entfernen'></span>";
     }
     content = $(content).appendTo("#pois");
     $(content).attr("lat", marker.getLatLng().lat);

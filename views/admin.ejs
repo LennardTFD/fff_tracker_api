@@ -31,6 +31,7 @@ for(let i = 0; i < keys.length; i++)
     <h4 class="routeTitle"><%= name %></h4>
     <input type="button" <%= active ? "class=active" : ""%> value="Aktivieren" onclick="updateStatus('<%= route._id %>', true)">
     <input type="button" <%= !active ? "class=active" : ""%> value="Deaktivieren" onclick="updateStatus('<%= route._id %>', false)">
+    <input type="button" value="Bearbeiten" onclick="window.location.href = '/admin/edit/<%= route._id %>'">
     <input type="button" value="Löschen" onclick="deleteRoute('<%= route._id %>')">
 </div>
 <%
