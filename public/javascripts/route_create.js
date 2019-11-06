@@ -109,7 +109,7 @@ function addPoi(name = undefined, description = undefined, location = undefined)
     else
     {
         var marker = L.marker(location, {icon: blackIcon, draggable: true}).addTo(map);
-        var content = "<span class='poi'>POI Name:<input placeholder='POI Name' class='poiName' value='" + name + "'>POI Beschreibung:<input placeholder='POI Beschreibung' class='poiDescription' value='" + description + "'></span>";
+        var content = "<span id='" + id + "' class='poi'>POI Name:<input placeholder='POI Name' class='poiName' value='" + name + "'>POI Beschreibung:<input placeholder='POI Beschreibung' class='poiDescription' value='" + description + "'><input type='button' onclick='removePoi(" + id + ")'></span>";
     }
     content = $(content).appendTo("#pois");
     $(content).attr("lat", marker.getLatLng().lat);
@@ -186,7 +186,15 @@ function saveRoute() {
     let xhr = new XMLHttpRequest();
 
     // 2. Configure it: GET-request for the URL /article/.../load
+
+    if(routeId == undefined)
+    {
         xhr.open('POST', '/api/create/route/');
+    }
+    else
+    {
+        xhr.open('POST', '/api/edit/route/' + routeId);
+    }
 
     // 3. Send the request over the network
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');

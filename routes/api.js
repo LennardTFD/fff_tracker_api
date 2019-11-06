@@ -160,6 +160,26 @@ router.post('/create/route/', async function (req, res, next) {
     res.send({msg: "success"});
 });
 
+router.post('/edit/route/:routeId', async function (req, res, next) {
+
+    let route = JSON.parse(req.body.route);
+    let name = route.name;
+    let description = route.description;
+    let descriptionEnd = route.descriptionEnd;
+    let color = route.color;
+    let checkpoints = route.checkpoints;
+    let routingpoints = route.routingpoints;
+    let pois = route.pois;
+
+    res.status(200);
+    res.type("json");
+    await db.connect().then(async () => {
+        return await db.editRoute(parseInt(req.params.routeId), name, description, descriptionEnd, color, checkpoints, routingpoints, pois);
+    });
+
+    res.send({msg: "success"});
+});
+
 //Create march
 router.post('/create/march/', async function (req, res, next) {
 

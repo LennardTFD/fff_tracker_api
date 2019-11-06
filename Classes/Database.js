@@ -113,6 +113,23 @@ class Database {
         await this.db.collection(DB.ROUTES).insertOne(query);
     }
 
+    async editRoute(routeId, name, description, descriptionEnd, color, checkpoints, routingPoints, pois)
+    {
+
+        //POIS: {latlng: [lat, lng], title: "Zwischenkundgebung", description: "Kurze Beschreibung"}
+        let query = {
+            _id: routeId,
+            name: name,
+            description: description,
+            descriptionEnd: descriptionEnd,
+            color: color,
+            checkpoints: checkpoints,
+            routingPoints: routingPoints,
+            pois: pois
+        };
+        await this.db.collection(DB.ROUTES).updateOne({_id: routeId}, {$set: query});
+    }
+
     async deleteRoute(routeId)
     {
         await this.db.collection(DB.ROUTES).deleteOne({_id: routeId});

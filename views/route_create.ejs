@@ -1,69 +1,113 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Route erstellen</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel='stylesheet' href='/stylesheets/route.css' />
-  <!--<script src="/socket.io/socket.io.js"></script>-->
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <!-- Leaflet -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
-  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
+    <%if (locals.edit == true) {%>
+        <title>Route bearbeiten</title>
+    <% } else { %>
+        <title>Route erstellen</title>
+    <%}%>
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
-  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='/stylesheets/route.css'/>
+    <!--<script src="/socket.io/socket.io.js"></script>-->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+          integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+            integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+            crossorigin=""></script>
 
-  <script src="/javascripts/Control.Geocoder.js"></script>
-  <script src="/javascripts/L.Routing.OpenRouteService.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"/>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 
-  <script>
-    ACCESS_TOKEN = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
-    MB_ATTR = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+    <script src="/javascripts/Control.Geocoder.js"></script>
+    <script src="/javascripts/L.Routing.OpenRouteService.js"></script>
+
+    <script>
+        ACCESS_TOKEN = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+        MB_ATTR = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
             '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
             'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
-    MB_URL = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + ACCESS_TOKEN;
-    OSM_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    OSM_ATTRIB = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-  </script>
+        MB_URL = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + ACCESS_TOKEN;
+        OSM_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        OSM_ATTRIB = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+    </script>
 
 </head>
 <body>
 <!--<body id='map' style="height: 100%; min-height: 100%;">-->
 <div id='map'></div>
 <div id="overlay">
-<div id='routeCreator' style="z-index: 9999999;">
-  <input id="routeTitleInput" name="routeTitle" type="text" placeholder="Routen Name"><br>
-  <textarea id="routeDescriptionInput" name="routeDescription" placeholder="Routen Beschreibung"></textarea><br>
-  <textarea id="routeDescriptionEndInput" name="routeDescriptionEnd" placeholder="Routen Ende Beschreibung"></textarea><br>
-  <select id="routeColorInput" name="routeColor">
-    <option value="red" style="background-color: red;">Rot</option>
-    <option value="green" style="background-color: green;">Grün</option>
-    <option value="blue" style="background-color: blue;">Blau</option>
-    <option value="yellow" style="background-color: yellow;">Gelb</option>
-    <option value="orange" style="background-color: orange;">Orange</option>
-    <option value="violet" style="background-color: violet;">Lila</option>
-    <option value="grey" style="background-color: grey;">Grau</option>
-  </select>
+    <div id='routeCreator' style="z-index: 9999999;">
+        <input id="routeTitleInput" name="routeTitle" type="text" placeholder="Routen Name"><br>
+        <textarea id="routeDescriptionInput" name="routeDescription" placeholder="Routen Beschreibung"></textarea><br>
+        <textarea id="routeDescriptionEndInput" name="routeDescriptionEnd"
+                  placeholder="Routen Ende Beschreibung"></textarea><br>
+        <select id="routeColorInput" name="routeColor">
+            <option value="red" style="background-color: red;">Rot</option>
+            <option value="green" style="background-color: green;">Grün</option>
+            <option value="blue" style="background-color: blue;">Blau</option>
+            <option value="yellow" style="background-color: yellow;">Gelb</option>
+            <option value="orange" style="background-color: orange;">Orange</option>
+            <option value="violet" style="background-color: violet;">Lila</option>
+            <option value="grey" style="background-color: grey;">Grau</option>
+        </select>
 
-  <input id="checkpointAdd" type="button" value="Checkpoint">
-  <div id="checkpoints">
+        <input id="checkpointAdd" type="button" value="Checkpoint">
+        <div id="checkpoints">
 
-  </div>
+        </div>
 
 
-  <input id="poiAdd" type="button" value="POI" onclick="addPoi()">
-  <div id="pois">
+        <input id="poiAdd" type="button" value="POI" onclick="addPoi()">
+        <div id="pois">
 
-  </div>
-  <input id="saveRoute" type="button" value="Speichern" onclick="saveRoute()">
+        </div>
+        <input id="saveRoute" type="button" value="Speichern" onclick="saveRoute()">
 
+    </div>
 </div>
-</div>
 
 
- <!--<div id="map" style="width: 100vh; height: 100vh; position:absolute"></div>-->
+<!--<div id="map" style="width: 100vh; height: 100vh; position:absolute"></div>-->
 <script src='/javascripts/markers.js'></script>
 <script src='/javascripts/route_create.js'></script>
+<%if (locals.edit == true) {%>
+    <script>let routeId = <%= locals.routeId %></script>
+    <script src='/javascripts/route_edit.js'></script>
+    <script>
+        $.ajax({
+            url: "/api/route/" + routeId,
+            context: document.body
+        }).done(function(resp) {
+            initEdit(resp);
+        });
+
+        function initEdit(route)
+        {
+            $("#routeTitleInput").val(route.name);
+            $("#routeDescriptionInput").val(route.description);
+            $("#routeDescriptionEndInput").val(route.descriptionEnd);
+
+            let pois = route.pois;
+            for(let i = 0; i < pois.length; i++)
+            {
+                let poi = pois[i];
+                addPoi(poi.title, poi.description, poi.latlng);
+            }
+            let routingPoints = route.routingPoints;
+            for(let i = 0; i < routingPoints.length; i++)
+            {
+                createRoutingPoint({latlng: routingPoints[i]}, false);
+            }
+            calcRoute();
+        }
+
+
+    </script>
+<% } %>
 </body>
 
 </html>

@@ -20,4 +20,10 @@ router.get('/create', async function (req, res, next) {
     res.render("route_create");
 });
 
+router.get('/edit/:routeId', async function (req, res, next) {
+
+    let routeId = parseInt(req.params.routeId);
+    res.render("route_create", {edit: true, routeId: routeId});
+});
+
 module.exports = router;
