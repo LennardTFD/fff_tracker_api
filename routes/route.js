@@ -11,7 +11,7 @@ router.get('/', async function (req, res, next) {
         return await db.getRoutes();
     });
     console.log(routes);
-    res.render("admin", {routes: routes});
+    res.render("route", {routes: routes});
 
 
 });
@@ -24,14 +24,6 @@ router.get('/edit/:routeId', async function (req, res, next) {
 
     let routeId = parseInt(req.params.routeId);
     res.render("route_create", {edit: true, routeId: routeId});
-});
-
-router.get('/serve', async function (req, res, next) {
-
-    const marches = await db.connect().then(async () => {
-        return await db.getMarches();
-    });
-    res.render("serve", {marches: marches});
 });
 
 module.exports = router;

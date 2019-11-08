@@ -17,9 +17,9 @@ async function init()
         let marchIds = Object.keys(resp);
         for(let i = 0; i < marchIds.length; i++)
         {
-            const active = marches[marchIds[i]].active;
-            console.log(marches[marchIds[i]]);
-            if(active)
+            const march = marches[marchIds[i]];
+            const active = march.active;
+            if(active && march.latlng[0] != -1 && march.latlng[1] != -1)
             {
                 createMarchLocation(marches[marchIds[i]]);
             }
@@ -59,14 +59,22 @@ async function init()
 
 
     socket.on("updateMarch", (marchId) => {
-
+        console.log("updateMarch received");
         $.ajax({
             url: "/api/march/" + marchId,
             context: document.body
         }).done(function(march) {
             //console.log(resp);
-            deleteMarchLocation(marchId);
-            createMarchLocation(march);
+            try{
+                deleteMarchLocation(marchId);
+            } catch (e) {
+                
+            }
+            console.log(march);
+            if(march.active && march.latlng[0] != -1 && march.latlng[1] != undefined)
+            {
+                createMarchLocation(march);
+            }
         });
     });
 
@@ -137,7 +145,7 @@ function drawRouteByCoords(route) {
 
     const mapsUrlStart = "https://maps.google.com/?q=" + checkpoints[0].lat + "," + checkpoints[0].lng;
     let startMarker = L.marker(checkpoints[0], {icon: greenIcon}).addTo(map);
-    startMarker.bindPopup("<b>Start</b><br><p>" + descriptionStart + "</p><a target='_blank' href='" + mapsUrlStart + "' style='vertical-align: middle;'><img src=\"https://img.icons8.com/color/48/000000/google-maps.png\" style='width: 22px;vertical-align: middle;'>Navigation starten</a>").openPopup();
+    startMarker.bindPopup("<b>Start</b><br><p>" + descriptionStart + "</p><a target='_blank' href='" + mapsUrlStart + "' style='vertical-align: middle;'><img src=\"https://img.icons8.com/color/48/000000/google-maps.png\" style='width: 22px;vertical-align: middle;'>Navigation starten</a>")
     const mapsUrlEnd = "https://maps.google.com/?q=" + checkpoints[checkpoints.length - 1][0] + "," + checkpoints[checkpoints.length - 1][1];
     let endMarker = L.marker(checkpoints[checkpoints.length - 1], {icon: redIcon}).addTo(map);
     endMarker.bindPopup("<b>Ende</b><br><p>" + descriptionEnd + "</p><img src=\"https://img.icons8.com/color/48/000000/google-maps.png\" style='width: 22px;vertical-align: middle;'><a target='_blank' href='" + mapsUrlEnd + "' style='vertical-align: middle;'>Navigation starten</a>");

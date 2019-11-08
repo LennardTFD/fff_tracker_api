@@ -9,7 +9,7 @@
 </head>
 <body style="height: 100%; min-height: 100%;">
 <a href="/">Zurück</a>
-<a href="/admin">Demorouten</a>
+<a href="/route">Demorouten</a>
 <%
 let keys = Object.keys(marches);
 if(keys.length < 1)
@@ -37,6 +37,7 @@ for(let i = 0; i < keys.length; i++)
 <%
 }
 %>
+<button onclick="document.location.href = '/march/create'">Neuer Zug</button>
 <script>
 
     let serveList = {};
@@ -44,13 +45,15 @@ for(let i = 0; i < keys.length; i++)
     function serve(marchId) {
         let marchItem = $("#march_" + marchId);
         let serveBtn = marchItem.find("input[value='Starten']");
-        let unservBtn = marchItem.find("input[value='Beenden']");
+        let unserveBtn = marchItem.find("input[value='Beenden']");
         serveBtn.css("display", "none");
-        unservBtn.css("display", "inline");
+        unserveBtn.css("display", "inline");
+
+        navigator.geolocation.getCurrentPosition((loc) => {updateLocation(marchId, loc.coords)})
         let tracker = setInterval(() => {
             //console.log("serving...");
             navigator.geolocation.getCurrentPosition((loc) => {updateLocation(marchId, loc.coords)})
-        }, 1000);
+        }, 60000);
         serveList[marchId] = tracker;
     }
     
@@ -72,9 +75,9 @@ for(let i = 0; i < keys.length; i++)
     
     function deleteMarch(marchId) {
 
-        if (!confirm("Route wirklich löschen?")) return;
+        if (!confirm("Zug wirklich löschen?")) return;
 
-        routeId = parseInt(marchId);
+        marchId = parseInt(marchId);
         let xhr = new XMLHttpRequest();
         xhr.open('POST', '/api/delete/march/' + marchId);
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');

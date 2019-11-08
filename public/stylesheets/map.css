@@ -1,6 +1,6 @@
 body {
   display: grid;
-  grid-template-areas: ' . .'
+  grid-template-areas: ' adminpanel .'
                         ' legende .'
                         ' . .';
   grid-template-columns: 1fr 5fr;
@@ -9,6 +9,19 @@ body {
 
 a {
   color: #00B7FF;
+}
+
+#adminPanel
+{
+  grid-area: adminpanel;
+  border: 1px solid black;
+  border-radius: 0px 0px 20px 0px;
+  background-color: white;
+  height: 30px;
+  left: 0px;
+  top: 0px;
+  padding: 5px;
+  position: fixed;
 }
 
 #legende

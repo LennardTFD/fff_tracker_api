@@ -3,13 +3,26 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require('express-session');
+var fs = require("fs");
 
 
 //var http = require('http');
 var app = express();
 
+const https = require("https");
+
+const secureServer = https.createServer({
+
+  key: fs.readFileSync("./certificates/server.key"),
+
+cert: fs.readFileSync("./certificates/server.cert")
+
+}, app);
+
 //var server = http.createServer(app);
-let io = require("socket.io").listen(app.listen(3000));
+//let io = require("socket.io").listen(app.listen(3000));
+let io = require("socket.io")(secureServer);
 
 io.sockets.on("connection", (socket) => {
   console.log("CONNECTION");
@@ -17,7 +30,8 @@ io.sockets.on("connection", (socket) => {
 
 var apiRouter = require('./routes/api')(app, io);
 //var apiRouter = require('./routes/api');
-var adminRouter = require('./routes/admin');
+var routeRouter = require('./routes/route');
+var marchRouter = require('./routes/march');
 //var testRouter = require('./routes/test')(app, io);
 
 
@@ -31,13 +45,60 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+  secret: 'work hard',
+  resave: true,
+  saveUninitialized: false
+}));
+
+
+app.get('/login', function(req, res, next) {
+  res.render("login");
+});
+
+app.post('/login', function(req, res, next) {
+  if(req.body.password == "testpw")
+  {
+    req.session.loggedin = true;
+    res.send("Logged in <a href='/'>Return to Start</a>");
+  }
+  else {
+    res.send("Wrong password <a href='/'>Return to Start</a>")
+  }
+});
+
+app.get('/logout', function(req, res, next) {
+  if (req.session) {
+    // delete session object
+    req.session.destroy(function(err) {
+      if(err) {
+        return next(err);
+      } else {
+        return res.redirect('/');
+      }
+    });
+  }
+});
+
+function requiresLogin(req, res, next) {
+  if (req.session && req.session.loggedin) {
+    console.log(req.session);
+    return next();
+  } else {
+
+    return res.send("You are not logged in!<a href='/'>Return to Start</a>");
+  }
+}
+
 app.get('/io', (req, res, next) => {res.sendFile(path.join(__dirname, "/node_modules/socket.io-client/dist/socket.io.js"))});
 app.use('/api', apiRouter);
-app.use('/admin', adminRouter);
+app.use('/route', requiresLogin, routeRouter);
+app.use('/march', requiresLogin, marchRouter);
 //app.use('/test', testRouter);
 app.use('/', (req, res, next) => {
   res.render("index");
 });
+
 
 
 
@@ -58,5 +119,9 @@ app.use(function(err, req, res, next) {
 });
 
 //server.listen(3000);
+secureServer.listen(2050, () => {
 
+  console.log("secure server started at 2050");
+
+});
 module.exports = app;

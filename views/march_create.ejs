@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+<head>
+    <title>FFF Demo Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='/stylesheets/route.css'/>
+
+    <!--<script src="/socket.io/socket.io.js"></script>-->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src='/javascripts/march_create.js'></script>
+</head>
+<body style="height: 100%; min-height: 100%;">
+<a href="/">Zurück</a>
+<a href="/route">Demorouten</a>
+<a href="/march">Demozüge</a>
+<br>
+<input id="marchTitleInput" type="text" placeholder="Zug Name"><br>
+<select id="marchColorInput" name="marchColor">
+    <option value="red" style="background-color: red;">Rot</option>
+    <option value="green" style="background-color: green;">Grün</option>
+    <option value="blue" style="background-color: blue;">Blau</option>
+    <option value="yellow" style="background-color: yellow;">Gelb</option>
+    <option value="orange" style="background-color: orange;">Orange</option>
+    <option value="violet" style="background-color: violet;">Lila</option>
+    <option value="grey" style="background-color: grey;">Grau</option>
+</select><br>
+<input id="saveMarch" type="button" value="Speichern" onclick="saveMarch()">
+<input id="abortMarch" type="button" value="Abbrechen" onclick="window.location.href = '/march'">
+</body>
+</html>

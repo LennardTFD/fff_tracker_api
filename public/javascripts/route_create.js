@@ -201,6 +201,6 @@ function saveRoute() {
     xhr.send("route=" + JSON.stringify(data));
 
     alert("Route gespeichert!");
-    window.location.href = "/admin";
+    window.location.href = "/route";
 
 }

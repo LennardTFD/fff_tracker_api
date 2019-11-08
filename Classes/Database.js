@@ -37,6 +37,7 @@ class Database {
     async getMarchById(marchId)
     {
         let march = await this.db.collection(DB.MARCHES).find({_id: marchId}).toArray();
+        if(march.length < 1) return {};
         if(!march.active)
         {
             march.latlng = [-1, -1];
@@ -47,7 +48,7 @@ class Database {
     async createMarch(name, color, latlng)
     {
         let query = {
-            _id: this.nextId(DB.MARCHES),
+            _id: await this.nextId(DB.MARCHES),
             name: name,
             color: color,
             latlng: latlng,
@@ -61,17 +62,20 @@ class Database {
     async updateMarchLocation(marchId, latlng, timestamp)
     {
         await this.db.collection(DB.MARCHES).updateMany({_id: marchId}, {$set: {latlng: latlng, lastUpdate: timestamp}} )
+        return true;
     }
 
     async setMarchStatus(marchId, status)
     {
         console.log("Setting march Status", marchId, status);
         await this.db.collection(DB.MARCHES).updateOne({_id: marchId}, {$set: {active: status}});
+        return true;
     }
 
     async deleteMarch(marchId)
     {
         await this.db.collection(DB.MARCHES).deleteOne({_id: marchId});
+        return true;
     }
 
     //Get List of routes (without Route Information)

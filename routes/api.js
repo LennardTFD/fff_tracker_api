@@ -18,7 +18,7 @@ let api = (app, io) => {
 // | _id = ROUTES| value = -1 |
 // | _id = MARCHES| value = -1 |
 
-const documentation = `
+    const documentation = `
 <title>API Documentation</title>
 <h2>GET</h2>
 <hr>
@@ -48,6 +48,15 @@ const documentation = `
 `;
 
 
+    function requiresLogin(req, res, next) {
+        if (req.session) {
+            return next();
+        } else {
+            res.type("json");
+            res.status(401);
+            res.send({msg: "unauthorized"});
+        }
+    }
 
 
     router.get('/', function (req, res, next) {
@@ -83,7 +92,7 @@ const documentation = `
     });
 
 //Set Location of marchId
-    router.post('/march/:marchId/location', async function (req, res, next) {
+    router.post('/march/:marchId/location', requiresLogin, async function (req, res, next) {
         let marchId = parseInt(req.params.marchId);
         let lat = parseFloat(req.body.lat);
         let lng = parseFloat(req.body.lng);
@@ -102,8 +111,9 @@ const documentation = `
         res.send({msg: "location set"});
     });
 
-    router.post('/march/:marchId/status/:status', async function (req, res, next) {
+    router.post('/march/:marchId/status/:status', requiresLogin, async function (req, res, next) {
         let status = req.params.status;
+        let marchId = req.params.marchId;
         if (status == "true") {
             status = true;
         } else if (status == "false") {
@@ -118,7 +128,9 @@ const documentation = `
         res.type("json");
         await db.connect().then(async () => {
             return await db.setMarchStatus(parseInt(req.params.marchId), status);
-        })
+        });
+        console.log("updating march!");
+        io.sockets.emit("updateMarch", marchId);
         res.send({msg: "success"});
     });
 
@@ -142,7 +154,7 @@ const documentation = `
     });
 
 //Get route by routeId
-    router.post('/route/:routeId/status/:status', async function (req, res, next) {
+    router.post('/route/:routeId/status/:status', requiresLogin, async function (req, res, next) {
         let status = req.params.status;
         if (status == "true") {
             status = true;
@@ -164,7 +176,7 @@ const documentation = `
     });
 
 //Create route
-    router.post('/create/route/', async function (req, res, next) {
+    router.post('/create/route/', requiresLogin, async function (req, res, next) {
 
         let route = JSON.parse(req.body.route);
         let name = route.name;
@@ -184,7 +196,7 @@ const documentation = `
         res.send({msg: "success"});
     });
 
-    router.post('/edit/route/:routeId', async function (req, res, next) {
+    router.post('/edit/route/:routeId', requiresLogin, async function (req, res, next) {
 
         let route = JSON.parse(req.body.route);
         let name = route.name;
@@ -205,11 +217,13 @@ const documentation = `
     });
 
 //Create march
-    router.post('/create/march/', async function (req, res, next) {
+    router.post('/create/march/', requiresLogin, async function (req, res, next) {
 
-        let name = req.body.name;
-        let color = req.body.color;
-        let latlng = [parseFloat(req.body.lat), parseFloat(req.body.lng)];
+        let march = JSON.parse(req.body.march);
+        console.log(march);
+        let name = march.name;
+        let color = march.color;
+        let latlng = march.latlng;
 
         res.status(200);
         res.type("json");
@@ -220,7 +234,7 @@ const documentation = `
 
 
 //Delete route
-    router.post('/delete/route/:routeId', async function (req, res, next) {
+    router.post('/delete/route/:routeId', requiresLogin, async function (req, res, next) {
         res.status(200);
         res.type("json");
         io.sockets.emit("deleteRoute", req.params.routeId);
@@ -231,13 +245,15 @@ const documentation = `
     });
 
 //Delete march
-    router.post('/delete/march/:marchId', async function (req, res, next) {
+    router.post('/delete/march/:marchId', requiresLogin, async function (req, res, next) {
+        let marchId = req.params.marchId;
         res.status(200);
         res.type("json");
         io.sockets.emit("deleteMarch", req.params.marchId);
         await db.connect().then(async () => {
             return await db.deleteMarch(parseInt(req.params.marchId));
         });
+        io.sockets.emit("updateMarch", marchId);
         res.send({msg: "success"});
     });
     return router;
