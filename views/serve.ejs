@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+<head>
+    <title>FFF Demo Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='/stylesheets/route.css'/>
+    <!--<script src="/socket.io/socket.io.js"></script>-->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+<body style="height: 100%; min-height: 100%;">
+<%
+let keys = Object.keys(marches);
+if(keys.length < 1)
+{
+%>
+    <h3>Keine Züge vorhanden</h3>
+<%
+}
+for(let i = 0; i < keys.length; i++)
+{
+    let march = marches[keys[i]];
+    let name = march.name;
+    let lastUpdate = march.lastUpdate;
+    let active = march.active;
+    let color = march.color;
+%>
+<div id="march_<%= march._id %>" class="marchItem">
+    <h4 class="marchTitle"><%= name %></h4>
+    <input type="button" <%= active ? "class=active" : ""%> value="Aktivieren" onclick="updateStatus('<%= march._id %>', true)">
+    <input type="button" <%= !active ? "class=active" : ""%> value="Deaktivieren" onclick="updateStatus('<%= march._id %>', false)">
+    <input type="button" style="background-color: green" value="Starten" onclick="serve(<%= march._id %>)">
+    <input type="button" style="display: none; background-color: red" value="Beenden" onclick="unserve(<%= march._id %>)">
+    <input type="button" value="Löschen" onclick="deleteMarch('<%= march._id %>')">
+</div>
+<%
+}
+%>
+<script>
+
+    let serveList = {};
+
+    function serve(marchId) {
+        let marchItem = $("#march_" + marchId);
+        let serveBtn = marchItem.find("input[value='Starten']");
+        let unservBtn = marchItem.find("input[value='Beenden']");
+        serveBtn.css("display", "none");
+        unservBtn.css("display", "inline");
+        let tracker = setInterval(() => {
+            //console.log("serving...");
+            navigator.geolocation.getCurrentPosition((loc) => {updateLocation(marchId, loc.coords)})
+        }, 1000);
+        serveList[marchId] = tracker;
+    }
+    
+    function updateLocation(marchId, coords) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/march/' + marchId + '/location');
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.send("lat=" + coords.latitude + "&lng=" + coords.longitude);
+    }
+    
+    function unserve(marchId) {
+        let marchItem = $("#march_" + marchId);
+        let serveBtn = marchItem.find("input[value='Starten']");
+        let unservBtn = marchItem.find("input[value='Beenden']");
+        serveBtn.css("display", "inline");
+        unservBtn.css("display", "none");
+        clearInterval(serveList[marchId]);
+    }
+    
+    function deleteMarch(marchId) {
+
+        if (!confirm("Route wirklich löschen?")) return;
+
+        routeId = parseInt(marchId);
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/delete/march/' + marchId);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.send();
+
+        $("#march_" + marchId).remove();
+    }
+
+    function updateStatus(marchId, status) {
+        var span = $("#march_" + marchId);
+        if(status == true)
+        {
+            span.find("input[value='Aktivieren']:eq(0)").addClass("active");
+            span.find("input[value='Deaktivieren']:eq(0)").removeClass("active");
+        } else
+        {
+            span.find("input[value='Deaktivieren']:eq(0)").addClass("active");
+            span.find("input[value='Aktivieren']:eq(0)").removeClass("active");
+        }
+        marchId = parseInt(marchId);
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/march/' + marchId + '/status/' + status);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.send();
+    }
+</script>
+</body>
+</html>

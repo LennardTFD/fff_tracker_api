@@ -1,6 +1,6 @@
-//var socket = io();
+var socket = io();
 //Create Map Layer
-var map = L.map('map').setView([51.2277411, 6.7734556], 13);
+var map = L.map('map', {maxZoom: 18, minZoom: 5}).setView([51.2277411, 6.7734556], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
 
 let marchLocations = {};
@@ -18,6 +18,7 @@ async function init()
         for(let i = 0; i < marchIds.length; i++)
         {
             const active = marches[marchIds[i]].active;
+            console.log(marches[marchIds[i]]);
             if(active)
             {
                 createMarchLocation(marches[marchIds[i]]);
@@ -26,7 +27,7 @@ async function init()
     });
 
     //Get Routes
-    $.ajax({
+    await $.ajax({
         url: "/api/routes",
         context: document.body
     }).done(function(resp) {
@@ -52,6 +53,27 @@ async function init()
     });
 
     map.on('locationfound', onLocationFound);
+
+
+    socket.on("msg", (msg)=> {alert(msg)});
+
+
+    socket.on("updateMarch", (marchId) => {
+
+        $.ajax({
+            url: "/api/march/" + marchId,
+            context: document.body
+        }).done(function(march) {
+            //console.log(resp);
+            deleteMarchLocation(marchId);
+            createMarchLocation(march);
+        });
+    });
+
+    socket.on("deleteMarch", (marchId) => {
+        deleteMarchLocation(marchId);
+    });
+
 }
 
 function onLocationFound(e) {
@@ -71,7 +93,7 @@ function createMarchLocation(march) {
     const location = march.latlng;
     const mapsUrl = "https://maps.google.com/?q=" + location[0] + "," + location[1];
     let marker = L.marker(location, {icon: eval(color+"Icon")}).addTo(map);
-    marker.bindPopup("<b>" + name + "</b><br>Zuletzt aktualisiert: " + formatedLastUpdate + "<br><a target='_blank' href='" + mapsUrl + "' style='vertical-align: middle;'><img src=\"https://img.icons8.com/color/48/000000/google-maps.png\" style='width: 22px;vertical-align: middle;'>Navigation starten</a>").openPopup();
+    marker.bindPopup("<b>" + name + "</b><br>Zuletzt aktualisiert: " + formatedLastUpdate + "<br><a target='_blank' href='" + mapsUrl + "' style='vertical-align: middle;'><img src=\"https://img.icons8.com/color/48/000000/google-maps.png\" style='width: 22px;vertical-align: middle;'>Navigation starten</a>");
     marchLocations[id] = marker;
 }
 
@@ -91,16 +113,16 @@ function drawRouteByCoords(route) {
 
     var routeWay = new L.Polyline(checkpoints, {
         color: color,
-        weight: 6,
+        weight: 8,
         opacity: 0.8,
-        smoothFactor: 2,
+        smoothFactor: 5,
     });
     routeWay.addTo(map);
 
     let decorator = L.polylineDecorator(routeWay, {
         patterns: [
             // defines a pattern of 10px-wide dashes, repeated every 20px on the line
-            {offset: 5, repeat: 100, symbol: L.Symbol.arrowHead({pixelSize: 10,  polygon: false, pathOptions: {stroke: true, color: "black"}})}
+            {offset: 5, repeat: 80, symbol: L.Symbol.arrowHead({pixelSize: 10,  polygon: false, pathOptions: {stroke: true, color: "black"}})}
         ]
     }).addTo(map);
 
@@ -122,8 +144,10 @@ function drawRouteByCoords(route) {
 }
 
 init();
+
 /*
-socket.on("test", () => {
-    console.log("Test emited!");
+socket.on("msg", (msg) => {
+    alert(msg);
 });
-*/
+ */
+

@@ -4,10 +4,22 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var apiRouter = require('./routes/api');
-var adminRouter = require('./routes/admin');
 
+//var http = require('http');
 var app = express();
+
+//var server = http.createServer(app);
+let io = require("socket.io").listen(app.listen(3000));
+
+io.sockets.on("connection", (socket) => {
+  console.log("CONNECTION");
+});
+
+var apiRouter = require('./routes/api')(app, io);
+//var apiRouter = require('./routes/api');
+var adminRouter = require('./routes/admin');
+//var testRouter = require('./routes/test')(app, io);
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,8 +31,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/io', (req, res, next) => {res.sendFile(path.join(__dirname, "/node_modules/socket.io-client/dist/socket.io.js"))});
 app.use('/api', apiRouter);
 app.use('/admin', adminRouter);
+//app.use('/test', testRouter);
 app.use('/', (req, res, next) => {
   res.render("index");
 });
@@ -42,5 +56,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+//server.listen(3000);
 
 module.exports = app;

@@ -63,6 +63,12 @@ class Database {
         await this.db.collection(DB.MARCHES).updateMany({_id: marchId}, {$set: {latlng: latlng, lastUpdate: timestamp}} )
     }
 
+    async setMarchStatus(marchId, status)
+    {
+        console.log("Setting march Status", marchId, status);
+        await this.db.collection(DB.MARCHES).updateOne({_id: marchId}, {$set: {active: status}});
+    }
+
     async deleteMarch(marchId)
     {
         await this.db.collection(DB.MARCHES).deleteOne({_id: marchId});

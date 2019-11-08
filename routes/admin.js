@@ -26,4 +26,12 @@ router.get('/edit/:routeId', async function (req, res, next) {
     res.render("route_create", {edit: true, routeId: routeId});
 });
 
+router.get('/serve', async function (req, res, next) {
+
+    const marches = await db.connect().then(async () => {
+        return await db.getMarches();
+    });
+    res.render("serve", {marches: marches});
+});
+
 module.exports = router;
