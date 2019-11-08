@@ -187,7 +187,7 @@ function saveRoute() {
 
     // 2. Configure it: GET-request for the URL /article/.../load
 
-    if(routeId == undefined)
+    if(typeof routeId == "undefined")
     {
         xhr.open('POST', '/api/create/route/');
     }
@@ -201,5 +201,6 @@ function saveRoute() {
     xhr.send("route=" + JSON.stringify(data));
 
     alert("Route gespeichert!");
+    window.location.href = "/admin";
 
 }
