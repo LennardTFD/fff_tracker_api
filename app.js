@@ -6,6 +6,7 @@ var logger = require('morgan');
 var session = require('express-session');
 var fs = require("fs");
 
+const {CONFIG} = require("./Constants");
 
 //var http = require('http');
 var app = express();
@@ -57,13 +58,13 @@ app.get('/login', function(req, res, next) {
 });
 
 app.post('/login', function(req, res, next) {
-  if(req.body.password == "testpw")
+  if(req.body.password == CONFIG.LOGINPASSWORD)
   {
     req.session.loggedin = true;
-    res.send("Logged in <a href='/'>Return to Start</a>");
+    res.send("Eingelogged <a href='/'>Return to Start</a>");
   }
   else {
-    res.send("Wrong password <a href='/'>Return to Start</a>")
+    res.send("Falches Passwort <a href='/login'>Zurück</a>");
   }
 });
 
@@ -96,7 +97,7 @@ app.use('/route', requiresLogin, routeRouter);
 app.use('/march', requiresLogin, marchRouter);
 //app.use('/test', testRouter);
 app.use('/', (req, res, next) => {
-  res.render("index");
+  res.render("index", {loggedin: req.session.loggedin});
 });
 
 

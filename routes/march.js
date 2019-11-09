@@ -11,18 +11,16 @@ router.get('/', async function (req, res, next) {
         return await db.getMarches();
     });
     res.render("march", {marches: marches});
-
-
 });
 
 router.get('/create', async function (req, res, next) {
     res.render("march_create");
 });
 
-router.get('/edit/:routeId', async function (req, res, next) {
+router.get('/edit/:marchId', async function (req, res, next) {
 
-    let routeId = parseInt(req.params.routeId);
-    res.render("march_create", {edit: true, routeId: routeId});
+    let marchId = parseInt(req.params.marchId);
+    res.render("march_create", {edit: true, marchId: marchId});
 });
 
 

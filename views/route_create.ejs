@@ -9,6 +9,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel='stylesheet' href='/stylesheets/route.css'/>
+        <link rel='stylesheet' href='/stylesheets/common.css'/>
     <!--<script src="/socket.io/socket.io.js"></script>-->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <!-- Leaflet -->
@@ -79,6 +80,7 @@
     <script>let routeId = <%= locals.routeId %></script>
     <script src='/javascripts/route_edit.js'></script>
     <script>
+        $('<div id="loading"><img id="loading-image" src="/images/loading.gif" alt="Loading..." /></div>').prependTo(document.body);
         $.ajax({
             url: "/api/route/" + routeId,
             context: document.body
@@ -91,6 +93,7 @@
             $("#routeTitleInput").val(route.name);
             $("#routeDescriptionInput").val(route.description);
             $("#routeDescriptionEndInput").val(route.descriptionEnd);
+            $("#routeColorInput>option[value='" + route.color + "']").prop("selected", true);
 
             let pois = route.pois;
             for(let i = 0; i < pois.length; i++)
@@ -104,6 +107,7 @@
                 createRoutingPoint({latlng: routingPoints[i]}, false);
             }
             calcRoute();
+            $("#loading").hide();
         }
 
 

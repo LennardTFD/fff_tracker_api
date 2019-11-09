@@ -4,6 +4,7 @@
     <title>FFF Demo Tracker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel='stylesheet' href='/stylesheets/route.css'/>
+    <link rel='stylesheet' href='/stylesheets/common.css'/>
 
     <!--<script src="/socket.io/socket.io.js"></script>-->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -26,5 +27,26 @@
 </select><br>
 <input id="saveMarch" type="button" value="Speichern" onclick="saveMarch()">
 <input id="abortMarch" type="button" value="Abbrechen" onclick="window.location.href = '/march'">
+<%if (locals.edit == true) {%>
+<script>
+    let marchId = <%= locals.marchId %>;
+
+    $('<div id="loading"><img id="loading-image" src="/images/loading.gif" alt="Loading..." /></div>').prependTo(document.body);
+
+    $.ajax({
+        url: "/api/march/" + marchId,
+        context: document.body
+    }).done(function(resp) {
+        initEdit(resp);
+    });
+
+    function initEdit(march)
+    {
+        $("#marchTitleInput").val(march.name);
+        $("#marchColorInput>option[value='" + march.color + "']").prop("selected", true);
+        $("#loading").hide();
+    }
+</script>
+<%}%>
 </body>
 </html>

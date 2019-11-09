@@ -5,3 +5,7 @@ exports.DB = {
     MARCHES: "marches",
     COUNTER: "counter"
 };
+
+exports.CONFIG = {
+    LOGINPASSWORD: "testpw"
+};

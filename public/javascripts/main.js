@@ -8,6 +8,7 @@ let marchLocations = {};
 async function init()
 {
     //Get Marches
+    $('<div id="loading"><img id="loading-image" src="/images/loading.gif" alt="Loading..." /></div>').prependTo(document.body);
     $.ajax({
         url: "/api/marches",
         context: document.body
@@ -30,7 +31,7 @@ async function init()
     await $.ajax({
         url: "/api/routes",
         context: document.body
-    }).done(function(resp) {
+    }).done(async function(resp) {
         //console.log(resp);
         let routes = resp;
         let routeIds = Object.keys(resp);
@@ -47,6 +48,10 @@ async function init()
                     //console.log(resp);
                     let route = resp;
                     drawRouteByCoords(route);
+                    if(i == routeIds.length - 1)
+                    {
+                        $("#loading").hide();
+                    }
                 });
             }
         }
@@ -100,7 +105,6 @@ function onLocationFound(e) {
     L.marker(e.latlng).addTo(map)
         .bindPopup("Deine Position").openPopup();
 }
-
 
 function createMarchLocation(march) {
     const id = march._id;
