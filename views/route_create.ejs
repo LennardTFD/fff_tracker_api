@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <%if (locals.edit == true) {%>
+    <% if (locals.edit == true) { %>
         <title>Route bearbeiten</title>
     <% } else { %>
         <title>Route erstellen</title>
-    <%}%>
+    <% } %>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel='stylesheet' href='/stylesheets/route.css'/>
-        <link rel='stylesheet' href='/stylesheets/common.css'/>
+    <link rel='stylesheet' href='/stylesheets/common.css'/>
     <!--<script src="/socket.io/socket.io.js"></script>-->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <!-- Leaflet -->
@@ -42,33 +42,33 @@
 <div id='map'></div>
 <div id="overlay">
     <div id='routeCreator' style="z-index: 9999999;">
-        <input id="routeTitleInput" name="routeTitle" type="text" placeholder="Routen Name"><br>
-        <textarea id="routeDescriptionInput" name="routeDescription" placeholder="Routen Beschreibung"></textarea><br>
-        <textarea id="routeDescriptionEndInput" name="routeDescriptionEnd"
-                  placeholder="Routen Ende Beschreibung"></textarea><br>
-        <select id="routeColorInput" name="routeColor">
-            <option value="red" style="background-color: red;">Rot</option>
-            <option value="green" style="background-color: green;">Grün</option>
-            <option value="blue" style="background-color: blue;">Blau</option>
-            <option value="yellow" style="background-color: yellow;">Gelb</option>
-            <option value="orange" style="background-color: orange;">Orange</option>
-            <option value="violet" style="background-color: violet;">Lila</option>
-            <option value="grey" style="background-color: grey;">Grau</option>
-        </select>
+        <div class="top">
+            <input id="routeTitleInput" name="routeTitle" type="text" placeholder="Routen Name"><br>
+            <textarea id="routeDescriptionInput" name="routeDescription"
+                      placeholder="Routen Beschreibung"></textarea><br>
+            <textarea id="routeDescriptionEndInput" name="routeDescriptionEnd"
+                      placeholder="Routen Ende Beschreibung"></textarea><br>
+            <select id="routeColorInput" name="routeColor">
+                <option value="red" style="background-color: red;">Rot</option>
+                <option value="green" style="background-color: green;">Grün</option>
+                <option value="blue" style="background-color: blue;">Blau</option>
+                <option value="yellow" style="background-color: yellow;">Gelb</option>
+                <option value="orange" style="background-color: orange;">Orange</option>
+                <option value="violet" style="background-color: violet;">Lila</option>
+                <option value="grey" style="background-color: grey;">Grau</option>
+            </select>
 
-        <input id="checkpointAdd" type="button" value="Checkpoint">
-        <div id="checkpoints">
 
+            <input id="poiAdd" type="button" value="POI" onclick="addPoi()">
         </div>
-
-
-        <input id="poiAdd" type="button" value="POI" onclick="addPoi()">
         <div id="pois">
+            <hr>
 
         </div>
-        <input id="saveRoute" type="button" value="Speichern" onclick="saveRoute()">
-        <input id="abortRoute" type="button" value="Abbrechen" onclick="window.location.href = '/route'">
-
+        <div class="bottom">
+            <input id="saveRoute" type="button" value="Speichern" onclick="saveRoute()">
+            <input id="abortRoute" type="button" value="Abbrechen" onclick="window.location.href = '/route'">
+        </div>
     </div>
 </div>
 
@@ -76,7 +76,7 @@
 <!--<div id="map" style="width: 100vh; height: 100vh; position:absolute"></div>-->
 <script src='/javascripts/markers.js'></script>
 <script src='/javascripts/route_create.js'></script>
-<%if (locals.edit == true) {%>
+<% if (locals.edit == true) { %>
     <script>let routeId = <%= locals.routeId %></script>
     <script src='/javascripts/route_edit.js'></script>
     <script>
@@ -84,26 +84,23 @@
         $.ajax({
             url: "/api/route/" + routeId,
             context: document.body
-        }).done(function(resp) {
+        }).done(function (resp) {
             initEdit(resp);
         });
 
-        function initEdit(route)
-        {
+        function initEdit(route) {
             $("#routeTitleInput").val(route.name);
             $("#routeDescriptionInput").val(route.description);
             $("#routeDescriptionEndInput").val(route.descriptionEnd);
             $("#routeColorInput>option[value='" + route.color + "']").prop("selected", true);
 
             let pois = route.pois;
-            for(let i = 0; i < pois.length; i++)
-            {
+            for (let i = 0; i < pois.length; i++) {
                 let poi = pois[i];
                 addPoi(poi.title, poi.description, poi.latlng);
             }
             let routingPoints = route.routingPoints;
-            for(let i = 0; i < routingPoints.length; i++)
-            {
+            for (let i = 0; i < routingPoints.length; i++) {
                 createRoutingPoint({latlng: routingPoints[i]}, false);
             }
             calcRoute();
