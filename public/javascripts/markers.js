@@ -70,6 +70,63 @@ var blackIcon = new L.Icon({
     shadowSize: [41, 41]
 });
 
+var redProtest = new L.Icon({
+    iconUrl: '/images/protest_red.png',
+    shadowUrl: '/images/protest_shadow.png',
+    iconSize: [70, 70],
+    iconAnchor: [0, 41],
+    popupAnchor: [27, -30],
+    shadowSize: [70, 70]
+});
+var greenProtest = new L.Icon({
+    iconUrl: '/images/protest_green.png',
+    shadowUrl: '/images/protest_shadow.png',
+    iconSize: [70, 70],
+    iconAnchor: [0, 41],
+    popupAnchor: [27, -30],
+    shadowSize: [70, 70]
+});
+var yellowProtest = new L.Icon({
+    iconUrl: '/images/protest_yellow.png',
+    shadowUrl: '/images/protest_shadow.png',
+    iconSize: [70, 70],
+    iconAnchor: [0, 41],
+    popupAnchor: [27, -30],
+    shadowSize: [70, 70]
+});
+var violetProtest = new L.Icon({
+    iconUrl: '/images/protest_violet.png',
+    shadowUrl: '/images/protest_shadow.png',
+    iconSize: [70, 70],
+    iconAnchor: [0, 41],
+    popupAnchor: [27, -30],
+    shadowSize: [70, 70]
+});
+var greyProtest = new L.Icon({
+    iconUrl: '/images/protest_grey.png',
+    shadowUrl: '/images/protest_shadow.png',
+    iconSize: [70, 70],
+    iconAnchor: [0, 41],
+    popupAnchor: [27, -30],
+    shadowSize: [70, 70]
+});
+var blueProtest = new L.Icon({
+    iconUrl: '/images/protest_blue.png',
+    shadowUrl: '/images/protest_shadow.png',
+    iconSize: [70, 70],
+    iconAnchor: [0, 41],
+    popupAnchor: [27, -30],
+    shadowSize: [70, 70]
+});
+var orangeProtest = new L.Icon({
+    iconUrl: '/images/protest_orange.png',
+    shadowUrl: '/images/protest_shadow.png',
+    iconSize: [70, 70],
+    iconAnchor: [0, 41],
+    popupAnchor: [27, -30],
+    shadowSize: [70, 70]
+});
+
 new L.divIcon({
     className : "arrowIcon",
     iconSize: new L.Point(30,30),

@@ -103,11 +103,12 @@ let api = (app, io) => {
             return false;
         }
         let lastUpdate = (new Date()).getTime();
-        await db.connect().then(async () => {
-            await db.updateMarchLocation(marchId, [lat, lng], lastUpdate);
+        let march = await db.connect().then(async () => {
+            //await db.updateMarchLocation(marchId, [lat, lng], lastUpdate);
+            return await db.updatAndGetMarchLocation(marchId, [lat, lng], lastUpdate);
         });
         res.status(200);
-        io.sockets.emit("updateMarch", marchId);
+        io.sockets.emit("updateMarchLocation", march);
         res.send({msg: "location set"});
     });
 
@@ -130,7 +131,15 @@ let api = (app, io) => {
             return await db.setMarchStatus(parseInt(req.params.marchId), status);
         });
         console.log("updating march!");
-        io.sockets.emit("updateMarch", marchId);
+        if(status)
+        {
+            io.sockets.emit("updateMarch", marchId);
+        }
+        else
+        {
+            io.sockets.emit("deleteMarch", marchId);
+
+        }
         res.send({msg: "success"});
     });
 
@@ -253,7 +262,7 @@ let api = (app, io) => {
         await db.connect().then(async () => {
             return await db.deleteMarch(parseInt(req.params.marchId));
         });
-        io.sockets.emit("updateMarch", marchId);
+        io.sockets.emit("deleteMarch", marchId);
         res.send({msg: "success"});
     });
     return router;

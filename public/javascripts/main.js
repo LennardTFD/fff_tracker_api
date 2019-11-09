@@ -78,6 +78,18 @@ async function init()
         });
     });
 
+    socket.on("updateMarchLocation", (march) => {
+        try{
+            deleteMarchLocation(march._id);
+        } catch (e) {
+
+        }
+        if(march.active && march.latlng[0] != -1 && march.latlng[1] != undefined)
+        {
+            createMarchLocation(march);
+        }
+    });
+
     socket.on("deleteMarch", (marchId) => {
         deleteMarchLocation(marchId);
     });
@@ -94,13 +106,18 @@ function createMarchLocation(march) {
     const id = march._id;
     const lastUpdate = march.lastUpdate;
     const d = new Date(lastUpdate);
-    const formatedLastUpdate = d.getHours() + ":" + d.getMinutes();
+    let houres = d.getHours();
+    let minutes = d.getMinutes();
+    if(houres < 10)  houres = "0"+houres;
+    if(minutes < 10)  minutes = "0"+minutes;
+    console.log(minutes);
+    const formatedLastUpdate = houres + ":" + minutes;
     const name = march.name;
     const color = march.color;
     //const color = "violet";
     const location = march.latlng;
     const mapsUrl = "https://maps.google.com/?q=" + location[0] + "," + location[1];
-    let marker = L.marker(location, {icon: eval(color+"Icon")}).addTo(map);
+    let marker = L.marker(location, {icon: eval(color+"Protest")}).addTo(map);
     marker.bindPopup("<b>" + name + "</b><br>Zuletzt aktualisiert: " + formatedLastUpdate + "<br><a target='_blank' href='" + mapsUrl + "' style='vertical-align: middle;'><img src=\"https://img.icons8.com/color/48/000000/google-maps.png\" style='width: 22px;vertical-align: middle;'>Navigation starten</a>");
     marchLocations[id] = marker;
 }

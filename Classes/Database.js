@@ -61,8 +61,14 @@ class Database {
 
     async updateMarchLocation(marchId, latlng, timestamp)
     {
-        await this.db.collection(DB.MARCHES).updateMany({_id: marchId}, {$set: {latlng: latlng, lastUpdate: timestamp}} )
+        await this.db.collection(DB.MARCHES).updateMany({_id: marchId}, {$set: {latlng: latlng, lastUpdate: timestamp}} );
         return true;
+    }
+
+    async updatAndGetMarchLocation(marchId, latlng, timestamp)
+    {
+        let march = await this.db.collection(DB.MARCHES).findOneAndUpdate({_id: marchId}, {$set: {latlng: latlng, lastUpdate: timestamp}}, {returnOriginal: false});
+        return march;
     }
 
     async setMarchStatus(marchId, status)
