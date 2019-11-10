@@ -68,6 +68,16 @@ class Database {
     }
 
 
+    async editMarch(marchId, name, color)
+    {
+        let query = {
+            _id: marchId,
+            name: name,
+            color: color
+        };
+        return await this.db.collection(DB.MARCHES).findOneAndUpdate({_id: marchId}, {$set: query}, {returnOriginal: false});
+    }
+
     async updateMarchLocation(marchId, latlng, timestamp)
     {
         await this.db.collection(DB.MARCHES).updateMany({_id: marchId}, {$set: {latlng: latlng, lastUpdate: timestamp}} );

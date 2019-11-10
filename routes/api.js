@@ -3,6 +3,7 @@
 var express = require('express');
 const Database = require("../Classes/Database");
 const db = new Database();
+const {CONFIG} = require("../Constants");
 
 
 let api = (app, io) => {
@@ -49,7 +50,7 @@ let api = (app, io) => {
 
 
     function requiresLogin(req, res, next) {
-        if (req.session) {
+        if (req.session || req.body.password == CONFIG.LOGINPASSWORD) {
             return next();
         } else {
             res.type("json");
@@ -223,6 +224,22 @@ let api = (app, io) => {
             return await db.editRoute(parseInt(req.params.routeId), name, description, descriptionEnd, color, checkpoints, routingpoints, pois);
         });
 
+        res.send({msg: "success"});
+    });
+
+    router.post('/edit/march/:marchId', requiresLogin, async function (req, res, next) {
+
+        let march = JSON.parse(req.body.march);
+        let name = march.name;
+        let color = march.color;
+
+        res.status(200);
+        res.type("json");
+        let marchUpdated = await db.connect().then(async () => {
+            return await db.editMarch(parseInt(req.params.marchId), name, color);
+        });
+        console.log(marchUpdated);
+        io.sockets.emit("updateMarchLocation", marchUpdated.value);
         res.send({msg: "success"});
     });
 
