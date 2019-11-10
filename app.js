@@ -80,7 +80,7 @@ app.get('/logout', function(req, res, next) {
 });
 
 function requiresLogin(req, res, next) {
-  if (req.session && req.session.loggedin) {
+  if ((req.session && req.session.loggedin) || req.body.password == CONFIG.LOGINPASSWORD) {
     console.log(req.session);
     return next();
   } else {

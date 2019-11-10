@@ -50,7 +50,7 @@ let api = (app, io) => {
 
 
     function requiresLogin(req, res, next) {
-        if (req.session || req.body.password == CONFIG.LOGINPASSWORD) {
+        if ((req.session && req.session.loggedin) || req.body.password == CONFIG.LOGINPASSWORD) {
             return next();
         } else {
             res.type("json");
@@ -60,7 +60,7 @@ let api = (app, io) => {
     }
 
 
-    router.get('/', function (req, res, next) {
+    router.get('/', requiresLogin, function (req, res, next) {
         res.send(documentation);
     });
 
