@@ -107,8 +107,9 @@ let api = (app, io) => {
             //await db.updateMarchLocation(marchId, [lat, lng], lastUpdate);
             return await db.updatAndGetMarchLocation(marchId, [lat, lng], lastUpdate);
         });
-        res.status(200);
+        //io.sockets.emit("updateMarch", marchId);
         io.sockets.emit("updateMarchLocation", march);
+        res.status(200);
         res.send({msg: "location set"});
     });
 

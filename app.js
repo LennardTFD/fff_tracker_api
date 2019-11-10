@@ -1,7 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
 var fs = require("fs");
@@ -15,9 +14,9 @@ const https = require("https");
 
 const secureServer = https.createServer({
 
-  key: fs.readFileSync("./certificates/server.key"),
+  key: fs.readFileSync("certificates/server.key"),
 
-cert: fs.readFileSync("./certificates/server.cert")
+cert: fs.readFileSync("certificates/server.cert")
 
 }, app);
 
@@ -43,7 +42,6 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({

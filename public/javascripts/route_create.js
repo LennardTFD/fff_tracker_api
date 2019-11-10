@@ -104,7 +104,7 @@ function addPoi(name = undefined, description = undefined, location = undefined)
     if(name == undefined && description == undefined && location == undefined)
     {
         var marker = L.marker(map.getCenter(), {icon: blackIcon, draggable: true}).addTo(map);
-        var content = "<span id='" + id + "' class='poi'><a href='#' onclick='findPoi($(this).parent())'>POI Name:</a><input placeholder='POI Name' class='poiName'><p>POI Beschreibung:</p><input placeholder='POI Beschreibung' class='poiDescription'><br><input type='button' onclick='removePoi(" + id + ")' value='Entfernen'><hr></span>";
+        var content = "<span id='" + id + "' class='poi'><a style='font-weight: bold' href='#' onclick='findPoi($(this).parent())'>POI Name:</a><input placeholder='POI Name' class='poiName'><p>POI Beschreibung:</p><input placeholder='POI Beschreibung' class='poiDescription'><br><input type='button' onclick='removePoi(" + id + ")' value='Entfernen'><hr></span>";
     }
     else
     {

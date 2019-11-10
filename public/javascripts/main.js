@@ -15,14 +15,13 @@ async function init()
     }).done(function(resp) {
         //console.log(resp);
         let marches = resp;
-        let marchIds = Object.keys(resp);
-        for(let i = 0; i < marchIds.length; i++)
+        for(let i = 0; i < marches.length; i++)
         {
-            const march = marches[marchIds[i]];
+            const march = marches[i];
             const active = march.active;
             if(active && march.latlng[0] != -1 && march.latlng[1] != -1)
             {
-                createMarchLocation(marches[marchIds[i]]);
+                createMarchLocation(marches[i]);
             }
         }
     });
@@ -64,7 +63,7 @@ async function init()
 
 
     socket.on("updateMarch", (marchId) => {
-        console.log("updateMarch received");
+        //console.log("updateMarch");
         $.ajax({
             url: "/api/march/" + marchId,
             context: document.body
@@ -84,6 +83,8 @@ async function init()
     });
 
     socket.on("updateMarchLocation", (march) => {
+        //console.log(march);
+        //console.log("updateMarchLocation");
         try{
             deleteMarchLocation(march._id);
         } catch (e) {
@@ -96,6 +97,7 @@ async function init()
     });
 
     socket.on("deleteMarch", (marchId) => {
+        //console.log("deleteMarch");
         deleteMarchLocation(marchId);
     });
 

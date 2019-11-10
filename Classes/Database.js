@@ -10,16 +10,24 @@ class Database {
         try {
             var connection = await mongoClient.connect(DB.URL, {useNewUrlParser: true, useUnifiedTopology: true});
             this.db = connection.db(DB.DB);
-            console.info("MongoClient Connection successfull.");
+            //console.info("MongoClient Connection successfull.");
         } catch (ex) {
             console.error("Error caught,", ex);
         }
     }
 
+    async setupDatabase()
+    {
+        await this.db.collection("c").insertOne({_id: DB.MARCHES, lastIndex: 0});
+        await this.db.collection("c").insertOne({_id: DB.ROUTES, lastIndex: 0});
+        return true;
+    }
+
     async getMarches()
     {
         let marches = await this.db.collection(DB.MARCHES).find({}).toArray();
-        let response = {};
+        //let response = {};
+        let response = [];
         for(let i = 0; i < marches.length; i++)
         {
             let march = marches[i];
@@ -29,7 +37,8 @@ class Database {
             {
                 march.latlng = [-1, -1];
             }
-            response[march._id] = march;
+            //response[march._id] = march;
+            response.push(march);
         }
         return response;
     }
@@ -68,7 +77,7 @@ class Database {
     async updatAndGetMarchLocation(marchId, latlng, timestamp)
     {
         let march = await this.db.collection(DB.MARCHES).findOneAndUpdate({_id: marchId}, {$set: {latlng: latlng, lastUpdate: timestamp}}, {returnOriginal: false});
-        return march;
+        return march.value;
     }
 
     async setMarchStatus(marchId, status)
