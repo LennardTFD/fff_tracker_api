@@ -50,7 +50,7 @@ function saveMarch() {
     }
     else
     {
-        xhr.open('POST', '/api/edit/march/' + routeId);
+        xhr.open('POST', '/api/edit/march/' + marchId);
     }
 
     // 3. Send the request over the network
