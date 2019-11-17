@@ -2,6 +2,9 @@
 <html style="height: 100%;">
 <head>
   <title>FFF Demo Tracker</title>
+  <meta name="description" content="Fridays for Future Düsseldorf Live Demo Tracker - jederzeit wissen, wo der Demozug gerade ist">
+  <meta http-equiv="content-language" content="de">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel='stylesheet' href='/stylesheets/map.css' />
   <link rel='stylesheet' href='/stylesheets/common.css'/>
@@ -32,13 +35,12 @@
   <script src='/javascripts/markers.js'></script>
 </head>
 <body id='map' style="height: 100%; min-height: 100%;">
-<%if(loggedin){%>
-<div id="adminPanel" style="z-index: 9999998;">
+<h1 style="display: none;">Fridays for Future Düsseldorf Demo Tracker</h1>
+<div id="adminPanel" style="z-index: 9999998; display: <%if(loggedin){%>block<%}else{%>none<%}%>">
   <a href="/route">Demorouten</a>
   <a href="/march">Demozüge</a>
   <a href="/logout">Logout</a>
 </div>
-<%}%>
 <div id='legende' style="z-index: 9999999;">
 
   <h3>Legende</h3>

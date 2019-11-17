@@ -19,7 +19,7 @@ let march = (cache) => {
         if (!cache.keyExists(["marches"])) {
             cache.cache = Object.assign(cache.cache, {
                 "marches": await db.connect().then(async () => {
-                    return await db.getMarches(marchId);
+                    return await db.getMarches();
                 })
             });
         }

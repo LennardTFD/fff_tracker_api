@@ -10,7 +10,7 @@ let route = (cache) => {
 
         if (!cache.keyExists(["routes"])) {
             cache.cache = Object.assign(cache.cache, {"routes": await db.connect().then(async () => {
-                return await db.getRoutes(marchId);
+                return await db.getRoutes();
             })});
         }
         let routes = cache.cache["routes"];

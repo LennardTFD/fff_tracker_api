@@ -5,6 +5,13 @@ class Cache
         this.cache = {};
     }
 
+    reset()
+    {
+        console.log("Reseting cache!");
+        this.cache = {};
+        console.log(this.cache);
+    }
+
     readCache(keys)
     {
         if(!this.keyExists(keys)) return;

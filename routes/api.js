@@ -407,6 +407,13 @@ let api = (app, io, cache) => {
         res.send(cache.cache);
     });
 
+    router.post("/cache/reset", requiresLogin, (req, res, next) => {
+        cache.reset();
+        res.status(200);
+        res.type("json");
+        res.send({msg: "success"});
+    });
+
 
     return router;
 }

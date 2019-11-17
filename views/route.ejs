@@ -12,6 +12,7 @@
 <body style="height: 100%; min-height: 100%;">
 <a href="/">Zurück</a>
 <a href="/march">Demozüge</a>
+<a href="#" onclick="resetCache()">Cache zurücksetzen</a>
 <%
 let keys = Object.keys(routes);
 if(keys.length < 1)
@@ -74,6 +75,13 @@ for(let i = 0; i < keys.length; i++)
         routeId = parseInt(routeId);
         let xhr = new XMLHttpRequest();
         xhr.open('POST', '/api/route/' + routeId + '/status/' + status);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.send();
+    }
+    
+    function resetCache() {
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/cache/reset');
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         xhr.send();
     }
