@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html style="height: 100%;">
 <head>
-  <title>FFF Demo Tracker</title>
-  <meta name="description" content="Fridays for Future Düsseldorf Live Demo Tracker - jederzeit wissen, wo der Demozug gerade ist">
+  <title>FFF Demo Tracker | Fridays for Future Düsseldorf</title>
+  <meta name="description" content="Fridays for Future Düsseldorf Live Demo Tracker. Finde den Demozug entlang der Route auch dann, wenn du nicht von Anfang an dabei sein kannst.">
   <meta http-equiv="content-language" content="de">
+  <meta name="keywords" content="FFF, Fridays for Future, Düsseldorf, Dusseldorf, Duesseldorf, Tracker, Live, Standort, Route, Demo, Demonstration, Karte">
+  <meta name="author" content="Lennard Giesing, Fridays for Future Düsseldorf">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel='stylesheet' href='/stylesheets/map.css' />
@@ -36,17 +38,26 @@
 </head>
 <body id='map' style="height: 100%; min-height: 100%;">
 <h1 style="display: none;">Fridays for Future Düsseldorf Demo Tracker</h1>
+<h2 style="display: none;">Fridays for Future Düsseldorf Live Demorouten Tracker</h2>
+<div style="display: none;">
+  <p>Finde hier jederzeit den Live Standort des Fridays for Future Demo Zuges.</p><br>
+  Selbst wenn du nicht von Anfang an dabei sein kannst, findest du ins mit diesem Tool<br>
+  den Zug in Düsseldorf wieder.<br>
+  <a href="https://www.facebook.com/fridaysforfutureduesseldorf/">Finde uns hier auf Facebook</a>
+  <a href="https://twitter.com/fff_duesseldorf">Finde uns hier auf Twitter</a>
+  <a href="https://duesseldorf4future.de/">Finde uns hier im Web</a>
+</div>
 <div id="adminPanel" style="z-index: 9999998; display: <%if(loggedin){%>block<%}else{%>none<%}%>">
-  <a href="/route">Demorouten</a>
-  <a href="/march">Demozüge</a>
-  <a href="/logout">Logout</a>
+  <a href="/route" title="Demorouten">Demorouten</a>
+  <a href="/march" title="Demozüge">Demozüge</a>
+  <a href="/logout" title="Logout">Logout</a>
 </div>
 <div id='legende' style="z-index: 9999999;">
 
   <h3>Legende</h3>
-  <span class="legende"><img class="legendeMarker greenMarker"> Start</span><br>
-  <span class="legende"><img class="legendeMarker redMarker"> Ende</span><br>
-  <span class="legende"><img class="legendeMarker blackMarker"> Zwischenstop</span><br>
+  <span class="legende"><img alt="Start Marker" title="Start Marker" class="legendeMarker greenMarker"> Start</span><br>
+  <span class="legende"><img alt="End Marker" title="End Marker" class="legendeMarker redMarker"> Ende</span><br>
+  <span class="legende"><img alt="Zwischenstop Marker" title="Zwischenstop Marker" class="legendeMarker blackMarker"> Zwischenstop</span><br>
 
 
   <script>
