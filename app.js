@@ -4,8 +4,11 @@ var path = require('path');
 var logger = require('morgan');
 var session = require('express-session');
 var fs = require("fs");
+var Cache = require("./Classes/Cache");
+let cache = new Cache();
 
 const {CONFIG} = require("./Constants");
+
 
 //var http = require('http');
 var app = express();
@@ -28,10 +31,11 @@ io.sockets.on("connection", (socket) => {
   console.log("CONNECTION");
 });
 
-var apiRouter = require('./routes/api')(app, io);
+var apiRouter = require('./routes/api')(app, io, cache);
 //var apiRouter = require('./routes/api');
-var routeRouter = require('./routes/route');
-var marchRouter = require('./routes/march');
+var routeRouter = require('./routes/route')(cache);
+//var marchRouter = require('./routes/march')(app, io, cache);
+var marchRouter = require('./routes/march')(cache);
 //var testRouter = require('./routes/test')(app, io);
 
 

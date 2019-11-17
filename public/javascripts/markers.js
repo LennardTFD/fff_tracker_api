@@ -1,3 +1,5 @@
+//Marker Klassen für Karte
+//Simple Marker
 var greenIcon = new L.Icon({
     iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -70,6 +72,7 @@ var blackIcon = new L.Icon({
     shadowSize: [41, 41]
 });
 
+//March Marker
 var redProtest = new L.Icon({
     iconUrl: '/images/protest_red.png',
     shadowUrl: '/images/protest_shadow.png',
@@ -127,6 +130,7 @@ var orangeProtest = new L.Icon({
     shadowSize: [70, 70]
 });
 
+//Richtungs Marker auf Route
 new L.divIcon({
     className : "arrowIcon",
     iconSize: new L.Point(30,30),

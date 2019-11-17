@@ -5,8 +5,7 @@ const Database = require("../Classes/Database");
 const db = new Database();
 const {CONFIG} = require("../Constants");
 
-
-let api = (app, io) => {
+let api = (app, io, cache) => {
     var router = express.Router();
 //DB Format
 // Table: ROUTES
@@ -68,18 +67,49 @@ let api = (app, io) => {
     router.get('/marches/', async function (req, res, next) {
         res.status(200);
         res.type("json");
-        res.send(await db.connect().then(async () => {
-            return await db.getMarches();
-        }));
+
+        if (!cache.keyExists(["marches"])) {
+            cache.cache = Object.assign(cache.cache, {
+                "marches": await db.connect().then(async () => {
+                    return await db.getMarches();
+                })
+            });
+        }
+        res.send(cache.cache["marches"]);
+
     });
 
 //Get March by marchId
     router.get('/march/:marchId', async function (req, res, next) {
+        let marchId = parseInt(req.params.marchId);
         res.status(200);
         res.type("json");
-        res.send(await db.connect().then(async () => {
-            return await db.getMarchById(parseInt(req.params.marchId));
-        }));
+
+        if(!cache.keyExists(["march"]))
+        {
+            cache.cache = Object.assign(cache.cache, {"march": {}});
+        }
+        if (!cache.keyExists(["march", String(marchId)])) {
+            /*
+            cache.cache = Object.assign({}, cache.cache, {
+                "march": {
+                    [String(marchId)]: await db.connect().then(async () => {
+                        return await db.getMarchById(marchId);
+                    })
+                }
+            });
+             */
+
+            cache.cache["march"][String(marchId)] = await db.connect().then(async () => {
+                return await db.getMarchById(marchId);
+            });
+        }
+        let resp = cache.cache["march"][String(marchId)];
+        if(!resp.active)
+        {
+            resp.latlng = [-1,-1];
+        }
+        res.send(resp);
     });
 
 //Get location of march by marchId
@@ -87,7 +117,7 @@ let api = (app, io) => {
         res.status(200);
         res.type("json");
         res.send(await db.connect().then(async () => {
-            var t = await db.getMarchById(parseInt(req.params.marchId));
+            var t = await db.getMarchById(req.params.marchId);
             return {lat: t.latlng[0], lng: t.latlng[1]};
         }));
     });
@@ -108,6 +138,13 @@ let api = (app, io) => {
             //await db.updateMarchLocation(marchId, [lat, lng], lastUpdate);
             return await db.updatAndGetMarchLocation(marchId, [lat, lng], lastUpdate);
         });
+
+        cache.cache["march"][String(marchId)] = march;
+        cache.cache = Object.assign(cache.cache, {
+            "marches": await db.connect().then(async () => {
+                return await db.getMarches();
+            })
+        });
         //io.sockets.emit("updateMarch", marchId);
         io.sockets.emit("updateMarchLocation", march);
         res.status(200);
@@ -116,7 +153,7 @@ let api = (app, io) => {
 
     router.post('/march/:marchId/status/:status', requiresLogin, async function (req, res, next) {
         let status = req.params.status;
-        let marchId = req.params.marchId;
+        let marchId = parseInt(req.params.marchId);
         if (status == "true") {
             status = true;
         } else if (status == "false") {
@@ -129,19 +166,33 @@ let api = (app, io) => {
 
         res.status(200);
         res.type("json");
-        await db.connect().then(async () => {
+        let march = await db.connect().then(async () => {
             return await db.setMarchStatus(parseInt(req.params.marchId), status);
         });
-        console.log("updating march!");
-        if(status)
+
+        if(!cache.keyExists(["march"]))
         {
-            io.sockets.emit("updateMarch", marchId);
+            cache.cache["march"] = {};
         }
-        else
+
+        if(!status)
         {
+            march.latlng = [-1, -1];
+        }
+        cache.cache["march"][String(marchId)] = march;
+        cache.cache = Object.assign(cache.cache, {
+            "marches": await db.connect().then(async () => {
+                return await db.getMarches();
+            })
+        });
+
+        if (status) {
+            io.sockets.emit("updateMarch", marchId);
+        } else {
             io.sockets.emit("deleteMarch", marchId);
 
         }
+
         res.send({msg: "success"});
     });
 
@@ -149,19 +200,33 @@ let api = (app, io) => {
     router.get('/routes/', async function (req, res, next) {
         res.status(200);
         res.type("json");
-        res.send(await db.connect().then(async () => {
-            return await db.getRoutes();
-        }));
 
+        if (!cache.keyExists(["routes"])) {
+            cache.cache = Object.assign(cache.cache, {
+                "routes": await db.connect().then(async () => {
+                    return await db.getRoutes();
+                })
+            });
+        }
+        res.send(cache.cache["routes"]);
     });
 
 //Get route by routeId
     router.get('/route/:routeId', async function (req, res, next) {
+        let routeId = parseInt(req.params.routeId);
         res.status(200);
         res.type("json");
-        res.send(await db.connect().then(async () => {
-            return await db.getRouteById(parseInt(req.params.routeId));
-        }));
+
+        if (!cache.keyExists(["route"])) {
+            cache.cache = Object.assign(cache.cache, {"route": {}})
+        }
+        if (!cache.keyExists(["route", String(routeId)])) {
+            cache.cache["route"][String(routeId)] = await db.connect().then(async () => {
+                return await db.getRouteById(routeId);
+            })
+        }
+        console.log("reading from cache");
+        res.send(cache.cache["route"][String(routeId)]);
     });
 
 //Get route by routeId
@@ -180,9 +245,18 @@ let api = (app, io) => {
 
         res.status(200);
         res.type("json");
-        await db.connect().then(async () => {
+        let route = await db.connect().then(async () => {
             return await db.setRouteStatus(parseInt(req.params.routeId), status);
-        })
+        });
+
+        cache.cache["route"][req.params.routeId] = route;
+
+        cache.cache = Object.assign(cache.cache, {
+            "routes": await db.connect().then(async () => {
+                return await db.getRoutes();
+            })
+        });
+
         res.send({msg: "success"});
     });
 
@@ -204,6 +278,12 @@ let api = (app, io) => {
             return await db.createRoute(name, description, descriptionEnd, color, checkpoints, routingpoints, pois);
         });
 
+        cache.cache = Object.assign(cache.cache, {
+            "routes": await db.connect().then(async () => {
+                return await db.getRoutes();
+            })
+        });
+
         res.send({msg: "success"});
     });
 
@@ -220,9 +300,16 @@ let api = (app, io) => {
 
         res.status(200);
         res.type("json");
-        await db.connect().then(async () => {
+        let rt = await db.connect().then(async () => {
             return await db.editRoute(parseInt(req.params.routeId), name, description, descriptionEnd, color, checkpoints, routingpoints, pois);
         });
+
+        cache.cache = Object.assign(cache.cache, {
+            "routes": await db.connect().then(async () => {
+                return await db.getRoutes();
+            })
+        });
+        cache.cache["route"][req.params.routeId] = rt;
 
         res.send({msg: "success"});
     });
@@ -238,8 +325,16 @@ let api = (app, io) => {
         let marchUpdated = await db.connect().then(async () => {
             return await db.editMarch(parseInt(req.params.marchId), name, color);
         });
-        console.log(marchUpdated);
-        io.sockets.emit("updateMarchLocation", marchUpdated.value);
+        //console.log(marchUpdated);
+        io.sockets.emit("updateMarchLocation", marchUpdated);
+
+        cache.cache["march"][req.params.marchId] = marchUpdated;
+        cache.cache = Object.assign(cache.cache, {
+            "marches": await db.connect().then(async () => {
+                return await db.getMarches();
+            })
+        });
+
         res.send({msg: "success"});
     });
 
@@ -247,16 +342,25 @@ let api = (app, io) => {
     router.post('/create/march/', requiresLogin, async function (req, res, next) {
 
         let march = JSON.parse(req.body.march);
-        console.log(march);
+        //console.log(march);
         let name = march.name;
         let color = march.color;
         let latlng = march.latlng;
 
         res.status(200);
         res.type("json");
-        res.send(await db.connect().then(async () => {
+
+        await db.connect().then(async () => {
             return await db.createMarch(name, color, latlng);
-        }));
+        });
+
+        cache.cache = Object.assign(cache.cache, {
+            "marches": await db.connect().then(async () => {
+                return await db.getMarches();
+            })
+        });
+
+        res.send({"msg": "successful"});
     });
 
 
@@ -268,21 +372,42 @@ let api = (app, io) => {
         await db.connect().then(async () => {
             return await db.deleteRoute(parseInt(req.params.routeId));
         });
+
+        cache.cache = Object.assign(cache.cache, {
+            "routes": await db.connect().then(async () => {
+                return await db.getRoutes();
+            })
+        });
+        delete cache.cache["route"][req.params.routeId];
         res.send({msg: "success"});
     });
 
 //Delete march
     router.post('/delete/march/:marchId', requiresLogin, async function (req, res, next) {
-        let marchId = req.params.marchId;
+        let marchId = parseInt(req.params.marchId);
         res.status(200);
         res.type("json");
         io.sockets.emit("deleteMarch", req.params.marchId);
         await db.connect().then(async () => {
             return await db.deleteMarch(parseInt(req.params.marchId));
         });
+        cache.cache = Object.assign(cache.cache, {
+            "marches": await db.connect().then(async () => {
+                return await db.getMarches();
+            })
+        });
+        delete cache.cache["march"][req.params.marchId];
         io.sockets.emit("deleteMarch", marchId);
         res.send({msg: "success"});
     });
+
+    router.get("/cache", (req, res, next) => {
+        res.status(200);
+        res.type("json");
+        res.send(cache.cache);
+    });
+
+
     return router;
 }
 module.exports = api;

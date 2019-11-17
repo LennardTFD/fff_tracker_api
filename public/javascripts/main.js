@@ -8,7 +8,7 @@ let marchLocations = {};
 async function init()
 {
     //Get Marches
-    $('<div id="loading"><img id="loading-image" src="/images/loading.gif" alt="Loading..." /></div>').prependTo(document.body);
+    //$('<div id="loading"><img id="loading-image" src="/images/loading.gif" alt="Loading..." /></div>').prependTo(document.body);
     $.ajax({
         url: "/api/marches",
         context: document.body
@@ -162,7 +162,8 @@ function drawRouteByCoords(route) {
     {
         let poi = pois[i];
         let poiMarker = L.marker(poi.latlng, {icon: blackIcon}).addTo(map);
-        poiMarker.bindPopup("<b>" + poi.title + "</b><br><p>" + poi.description + "</p>");
+        let mapsUrlPoi = "https://maps.google.com/?q=" + poi.latlng.lat + "," + poi.latlng.lng;
+        poiMarker.bindPopup("<b>" + poi.title + "</b><br><p>" + poi.description + "</p><img src=\"https://img.icons8.com/color/48/000000/google-maps.png\" style='width: 22px;vertical-align: middle;'><a target='_blank' href='" + mapsUrlPoi + "' style='vertical-align: middle;'>Navigation starten</a>");
     }
 
 

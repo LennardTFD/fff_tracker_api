@@ -75,7 +75,8 @@ class Database {
             name: name,
             color: color
         };
-        return await this.db.collection(DB.MARCHES).findOneAndUpdate({_id: marchId}, {$set: query}, {returnOriginal: false});
+        let march = await this.db.collection(DB.MARCHES).findOneAndUpdate({_id: marchId}, {$set: query}, {returnOriginal: false});
+        return march.value;
     }
 
     async updateMarchLocation(marchId, latlng, timestamp)
@@ -93,8 +94,8 @@ class Database {
     async setMarchStatus(marchId, status)
     {
         console.log("Setting march Status", marchId, status);
-        await this.db.collection(DB.MARCHES).updateOne({_id: marchId}, {$set: {active: status}});
-        return true;
+        let march =  await this.db.collection(DB.MARCHES).findOneAndUpdate({_id: marchId}, {$set: {active: status}}, {returnOriginal: false});
+        return march.value;
     }
 
     async deleteMarch(marchId)
@@ -126,7 +127,8 @@ class Database {
 
     async setRouteStatus(routeId, status)
     {
-        await this.db.collection(DB.ROUTES).updateOne({_id: routeId}, {$set: {active: status}});
+        let route = await this.db.collection(DB.ROUTES).findOneAndUpdate({_id: routeId}, {$set: {active: status}}, {returnOriginal: false});
+        return route.value;
     }
 
 
@@ -162,7 +164,8 @@ class Database {
             routingPoints: routingPoints,
             pois: pois
         };
-        await this.db.collection(DB.ROUTES).updateOne({_id: routeId}, {$set: query});
+        let route = await this.db.collection(DB.ROUTES).findOneAndUpdate({_id: routeId}, {$set: query}, {returnOriginal: false});
+        return route.value;
     }
 
     async deleteRoute(routeId)
