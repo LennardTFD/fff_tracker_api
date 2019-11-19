@@ -82,7 +82,7 @@ app.post('/login', function(req, res, next) {
     res.send("Eingelogged <a href='/'>Return to Start</a>");
   }
   else {
-    res.send("Falches Passwort <a href='/login'>Zurück</a>");
+    res.send("Falsches Passwort <a href='/login'>Zurück</a>");
   }
 });
 
