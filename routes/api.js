@@ -7,6 +7,9 @@ const {CONFIG} = require("../Constants");
 
 let api = (app, io, cache) => {
     var router = express.Router();
+
+
+
 //DB Format
 // Table: ROUTES
 // | [int] routeId | [string] name | [string] description | [array] checkpoints | [array] routingpoints | [array] pois | [string] color | [bool] active |
@@ -297,6 +300,8 @@ let api = (app, io, cache) => {
         let checkpoints = route.checkpoints;
         let routingpoints = route.routingpoints;
         let pois = route.pois;
+
+
 
         res.status(200);
         res.type("json");

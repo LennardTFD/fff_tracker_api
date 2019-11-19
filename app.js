@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+const { check, validationResult, sanitizeBody } = require('express-validator');
 var path = require('path');
 var logger = require('morgan');
 var session = require('express-session');
@@ -53,6 +54,21 @@ app.use(session({
   resave: true,
   saveUninitialized: false
 }));
+
+app.use(function(req, res, next) {
+  console.log("SANITIZING!");
+  console.log(req.body);
+  for (var item in req.body) {
+    console.log(req.body[item]);
+    req.body[item] = req.body[item].replace(/<br>/gi, "$LINEBREAK$");
+    console.log(req.body[item]);
+    req.body[item] = req.body[item].replace(/<|>|onerror|onload|javascript:|onmouseover|/gi, "");
+    req.body[item] = req.body[item].replace(/\$LINEBREAK\$/g, "<br>");
+    //req.body[item] = req.body[item].replace(/\\n/g, "<br>");
+    console.log(req.body[item]);
+  }
+  next();
+});
 
 
 app.get('/login', function(req, res, next) {
