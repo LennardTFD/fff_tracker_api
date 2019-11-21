@@ -3,24 +3,8 @@ map = L.map("map", {maxZoom: 18, minZoom: 5}).setView([51.2277411, 6.7734556], 1
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {}).addTo(map);
 
 
-function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
-
 function analytics() {
-    if(getCookie("cookieEnabled").length > 1)
+    if(localStorage.getItem("cookieEnabled") != null)
     {
         embed();
         return;
@@ -28,7 +12,7 @@ function analytics() {
     if (confirm("Damit diese Seite vollständig genutzt werden kann, speichern wir Cookies.\n" +
         "Außerdem erheben wir anonymisierte Daten um die Benutzererfahrung zu verbessern.\n" +
         "Zu unsere Datenschutzbestimmungen gelangen Sie durch abbrechen")) {
-        document.cookie = "cookieEnabled=true";
+        localStorage.setItem("cookieEnabled", "true");
         embed();
     }
     else
