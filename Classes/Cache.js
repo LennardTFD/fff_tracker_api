@@ -9,7 +9,7 @@ class Cache
     {
         console.log("Reseting cache!");
         this.cache = {};
-        console.log(this.cache);
+        //console.log(this.cache);
     }
 
     readCache(keys)
@@ -21,9 +21,7 @@ class Cache
     {
         if(!this.keyExists(keys)) return;
 
-
-
-        this.cache = Object.assign(this.cache, )
+        //this.cache = Object.assign(this.cache, )
     }
 
     keyExists(keys)
@@ -35,9 +33,6 @@ class Cache
             keys[i] = String(keys[i]);
             if(keys[i] in eval("this.cache" + keyString))
             {
-                console.log(keys);
-                //console.log(this.cache[keys[0]]);
-                //console.log("cache" + keyString);
                 if(typeof keys[i] == "number")
                 {
                     keyString += "[" + keys[i] + "]";
@@ -48,11 +43,9 @@ class Cache
                 }
 
             }else {
-                console.log(keyString + " does not exist");
                 return false;
             }
         }
-        console.log(keyString + " does exist");
         return true;
     }
 }

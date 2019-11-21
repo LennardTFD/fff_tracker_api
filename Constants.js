@@ -7,5 +7,6 @@ exports.DB = {
 };
 
 exports.CONFIG = {
+    PORT: 2050,
     LOGINPASSWORD: "testpw"
 };

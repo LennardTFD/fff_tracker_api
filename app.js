@@ -29,7 +29,7 @@ const secureServer = https.createServer({
 let io = require("socket.io")(secureServer);
 
 io.sockets.on("connection", (socket) => {
-  console.log("CONNECTION");
+  //console.log("CONNECTION");
 });
 
 var apiRouter = require('./routes/api')(app, io, cache);
@@ -56,8 +56,8 @@ app.use(session({
 }));
 
 app.use(function(req, res, next) {
-  console.log("SANITIZING!");
-  console.log(req.body);
+  //console.log("SANITIZING!");
+  //console.log(req.body);
   for (var item in req.body) {
     console.log(req.body[item]);
     req.body[item] = req.body[item].replace(/<br>/gi, "$LINEBREAK$");
@@ -113,6 +113,9 @@ app.get('/io', (req, res, next) => {res.sendFile(path.join(__dirname, "/node_mod
 app.use('/api', apiRouter);
 app.use('/route', requiresLogin, routeRouter);
 app.use('/march', requiresLogin, marchRouter);
+app.use("/datenschutz", (req, res, next) => {
+  res.render("datenschutz");
+});
 //app.use('/test', testRouter);
 app.use('/', (req, res, next) => {
   res.render("index", {loggedin: req.session.loggedin});
@@ -138,9 +141,13 @@ app.use(function(err, req, res, next) {
 });
 
 //server.listen(3000);
-secureServer.listen(2050, () => {
+secureServer.listen(CONFIG.PORT, () => {
 
-  console.log("secure server started at 2050");
+  console.log("==========================");
+  console.log("Fridays For Future Tracker");
+  console.log(" gestartet auf Port " + CONFIG.PORT);
+  console.log("==========================");
+
 
 });
 module.exports = app;
