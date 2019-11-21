@@ -1,11 +1,25 @@
 body {
   display: grid;
   grid-template-areas: ' adminpanel .'
-                        ' legende .'
+                        'legende .'
                         ' . .';
-  grid-template-columns: 1fr 5fr;
+  /*grid-template-columns: 0.5fr 5fr;*/
+  grid-template-columns: 1fr 10fr;
   grid-template-rows: 1.9fr 3fr 8fr;
 }
+
+@media (max-width : 800px) {
+  body {
+    display: grid;
+    grid-template-areas: ' adminpanel .'
+    'legende .'
+    ' . .';
+    /*grid-template-columns: 2.5fr 5fr;*/
+    grid-template-columns: 1.5fr 3fr;
+    grid-template-rows: 1.9fr 3fr 8fr;
+  }
+}
+
 
 a {
   color: #00B7FF;

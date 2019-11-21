@@ -20,7 +20,7 @@ const secureServer = https.createServer({
 
   key: fs.readFileSync("certificates/server.key"),
 
-cert: fs.readFileSync("certificates/server.cert")
+  cert: fs.readFileSync("certificates/server.cert")
 
 }, app);
 
@@ -109,7 +109,7 @@ function requiresLogin(req, res, next) {
   }
 }
 
-app.get('/io', (req, res, next) => {res.sendFile(path.join(__dirname, "/node_modules/socket.io-client/dist/socket.io.js"))});
+app.get('/io', (req, res, next) => {res.sendFile(path.join(__dirname, "/node_modules/socket.io-client/dist/socket.io.min.js"))});
 app.use('/api', apiRouter);
 app.use('/route', requiresLogin, routeRouter);
 app.use('/march', requiresLogin, marchRouter);
