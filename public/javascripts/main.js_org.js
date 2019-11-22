@@ -1,7 +1,37 @@
-var socket = io();
+var socket;
 //Create Map Layer
 var map = L.map('map', {maxZoom: 18, minZoom: 5}).setView([51.2277411, 6.7734556], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
+
+
+function analytics() {
+    if(localStorage.getItem("cookieEnabled") != null)
+    {
+        embed();
+        return;
+    }
+    if (confirm("Damit diese Seite vollständig genutzt werden kann, speichern wir Cookies.\n" +
+        "Außerdem erheben wir anonymisierte Daten um die Benutzererfahrung zu verbessern.\n" +
+        "Zu unsere Datenschutzbestimmungen gelangen Sie durch abbrechen")) {
+        localStorage.setItem("cookieEnabled", "true");
+        embed();
+    }
+    else
+    {
+        window.location.href = "/datenschutz";
+    }
+}
+
+function embed()
+{
+    socket = io();
+    //const analyticsString = '<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152743283-1"></script>';
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "UA-152743283-1");
+    //$("head").append(analyticsString);
+}
 
 let marchLocations = {};
 
@@ -174,7 +204,7 @@ function drawRouteByCoords(route) {
     let endMarker = L.marker(checkpoints[checkpoints.length - 1], {icon: redIcon}).addTo(map);
     endMarker.bindPopup("<b>Ende</b><br><p>" + descriptionEnd + "</p><img src=\"https://img.icons8.com/color/48/000000/google-maps.png\" style='width: 22px;vertical-align: middle;'><a target='_blank' href='" + mapsUrlEnd + "' style='vertical-align: middle;'>Navigation starten</a>");
 }
-
+analytics();
 init();
 
 /*
