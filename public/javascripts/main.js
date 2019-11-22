@@ -1,7 +1,7 @@
 var socket;
 //Create Map Layer
 var map = L.map('map', {maxZoom: 18, minZoom: 5}).setView([51.2277411, 6.7734556], 13);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: "<a href='https://github.com/LennardTFD'>Lennard Giesing</a>"}).addTo(map);
 
 let bounds = [];
 
