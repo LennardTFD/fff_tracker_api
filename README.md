@@ -1,2 +1,2 @@
-# fff_tracker_api
+# FFF Düsseldorf Demo Tracker
 https://tracker.fridaysforfutureduesseldorf.de
