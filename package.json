@@ -15,7 +15,7 @@
     "http-errors": "~1.6.3",
     "mongodb": "^3.4.1",
     "morgan": "~1.9.1",
-    "parsejson": "0.0.3",
+    "parsejson": "^0.0.3",
     "socketio": "^1.0.0",
     "ws": "^7.2.1"
   }
