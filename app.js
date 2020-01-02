@@ -56,16 +56,21 @@ app.use(session({
 }));
 
 app.use(function(req, res, next) {
+
+    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+
   //console.log("SANITIZING!");
   //console.log(req.body);
   for (var item in req.body) {
-    console.log(req.body[item]);
+    //console.log(req.body[item]);
     req.body[item] = req.body[item].replace(/<br>/gi, "$LINEBREAK$");
-    console.log(req.body[item]);
+    //console.log(req.body[item]);
     req.body[item] = req.body[item].replace(/<|>|onerror|onload|javascript:|onmouseover|/gi, "");
     req.body[item] = req.body[item].replace(/\$LINEBREAK\$/g, "<br>");
     //req.body[item] = req.body[item].replace(/\\n/g, "<br>");
-    console.log(req.body[item]);
+    //console.log(req.body[item]);
   }
   next();
 });

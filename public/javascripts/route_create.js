@@ -184,6 +184,19 @@ function findPoi(poiSpan) {
     map.flyTo({lat: lat, lng:lng}, 17);
 }
 
+async function addressToCoords(query) {
+    if(!query.contains("Düsseldorf")) query += " Düsseldorf";
+    let url = "https://nominatim.openstreetmap.org/search?q=" + query;
+
+    return await $.ajax({
+        type: "GET",
+        url: url
+    }).done(function(e) {
+        return [e[0].lat, e[0].lon];
+    });
+
+}
+
 //Route speichern
 function saveRoute() {
     //console.log("Saving Route!");
