@@ -123,7 +123,7 @@ app.use("/datenschutz", (req, res, next) => {
 });
 //app.use('/test', testRouter);
 app.use('/', (req, res, next) => {
-  res.render("index", {loggedin: req.session.loggedin});
+  res.render("index", {loggedin: req.session.loggedin, embed: req.query.embed});
 });
 
 
