@@ -59,7 +59,7 @@ app.use(function(req, res, next) {
 
     res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
+    //next();
 
   //console.log("SANITIZING!");
   //console.log(req.body);
@@ -75,6 +75,8 @@ app.use(function(req, res, next) {
   next();
 });
 
+
+app.get('/io', (req, res, next) => {res.sendFile(path.join(__dirname, "/node_modules/socket.io-client/dist/socket.io.min.js"))});
 
 app.get('/login', function(req, res, next) {
   res.render("login");
@@ -114,7 +116,6 @@ function requiresLogin(req, res, next) {
   }
 }
 
-app.get('/io', (req, res, next) => {res.sendFile(path.join(__dirname, "/node_modules/socket.io-client/dist/socket.io.min.js"))});
 app.use('/api', apiRouter);
 app.use('/route', requiresLogin, routeRouter);
 app.use('/march', requiresLogin, marchRouter);
@@ -123,7 +124,12 @@ app.use("/datenschutz", (req, res, next) => {
 });
 //app.use('/test', testRouter);
 app.use('/', (req, res, next) => {
-  res.render("index", {loggedin: req.session.loggedin, embed: req.query.embed});
+  let embed = true;
+  if(!req.query.embed)
+  {
+    embed = false;
+  }
+  res.render("index", {loggedin: req.session.loggedin, embed: embed});
 });
 
 

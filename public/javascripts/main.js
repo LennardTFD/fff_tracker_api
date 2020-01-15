@@ -1,4 +1,4 @@
-var socket;
+var socket = io();
 //Create Map Layer
 var map = L.map('map', {maxZoom: 18, minZoom: 5}).setView([51.2277411, 6.7734556], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: "<a href='https://github.com/LennardTFD'>Lennard Giesing</a>"}).addTo(map);
@@ -25,7 +25,7 @@ function analytics() {
 
 function embed()
 {
-    socket = io();
+
     //const analyticsString = '<script async src="https://www.googletagmanager.com/gtag/js?id=UA-152743283-1"></script>';
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
