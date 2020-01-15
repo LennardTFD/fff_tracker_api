@@ -32,26 +32,35 @@ async function calcRoute() {
     if(routingPoints.length < 2) return;
     //Coordinaten String für ORS
     var coordString = "";
+    var coordArray = [];
     //Für jeden Routen Punkt
     for(let i = 0; i < routingPoints.length; i++)
     {
         //Schreibe Koorinaten in ORS Query String
         pathPoints.push(routingPoints[i]._latlng);
         coordString += routingPoints[i]._latlng.lng + "," + routingPoints[i]._latlng.lat + "|";
+        coordArray.push([routingPoints[i]._latlng.lng, routingPoints[i]._latlng.lat]);
     }
     //Entferne letzte Pipe "|" aus ORS Query String
     coordString = coordString.slice(0, -1);
     //Erstelle URL mit Query String
-    var url = "https://api.openrouteservice.org/directions?coordinates=" + coordString + "&instructions=false&instructions_format=text&geometry_format=geojson&preference=shortest&units=m&profile=cycling-road&api_key=58d904a497c67e00015b45fc4f1ca5bb772b4a179eb9de97a5f03f5e";
+    //var url = "https://api.openrouteservice.org/directions?coordinates=" + coordString + "&instructions=false&instructions_format=text&geometry_format=geojson&preference=shortest&units=m&profile=cycling-road&api_key=58d904a497c67e00015b45fc4f1ca5bb772b4a179eb9de97a5f03f5e";
+    var url = "https://api.openrouteservice.org/v2/directions/cycling-road/geojson";
+    var details = {"coordinates": coordArray, "units": "m", "instructions": false};
     //Lies Route aus ORS API
-    getRouting(url);
+    getRouting(url, details);
 }
 
 //Lies Route von Openrouteservice
-function getRouting(url) {
+function getRouting(url, details) {
     $.ajax({
-        type: "GET",
-        url: url
+        type: "POST",
+        url: url,
+        data: JSON.stringify(details),
+        contentType: "application/json; charset=utf-8",
+        beforeSend: (xhr) => {
+            xhr.setRequestHeader("Authorization", "58d904a497c67e00015b45fc4f1ca5bb772b4a179eb9de97a5f03f5e")
+        }
     }).done(function(e) {
         console.log(e);
         drawRoute(e);
@@ -69,7 +78,10 @@ function drawRoute(api) {
         map.removeLayer(route);
     }
     //Lies Choordinaten der Checkpoints
-    let routePoints = api.routes[0].geometry.coordinates;
+    //let routePoints = api.routes[0].geometry.coordinates;
+    let routePoints = api.features[0].geometry.coordinates;
+    let routeLength = api.features[0].properties.summary.distance;
+    $("#routeLength").text(Math.round(routeLength));
     //Für jeden Punkt, wandel Array in JSON Objekt um
     let points = routePoints.map((e) => {return {lat: e[1], lng: e[0]}});
     //Zeichne Route mir allen Checkpoints

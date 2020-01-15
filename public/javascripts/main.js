@@ -180,7 +180,7 @@ function drawRouteByCoords(route) {
         color: color,
         weight: 8,
         opacity: 0.8,
-        smoothFactor: 5,
+        smoothFactor: 3,
     });
     routeWay.addTo(map);
 
