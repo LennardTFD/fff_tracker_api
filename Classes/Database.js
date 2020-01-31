@@ -132,7 +132,7 @@ class Database {
     }
 
 
-    async createRoute(name, description, descriptionEnd, color, checkpoints, routingPoints, pois)
+    async createRoute(name, description, descriptionEnd, color, checkpoints, routingPoints, pois, distance)
     {
 
         //POIS: {latlng: [lat, lng], title: "Zwischenkundgebung", description: "Kurze Beschreibung"}
@@ -145,12 +145,13 @@ class Database {
             checkpoints: checkpoints,
             routingPoints: routingPoints,
             pois: pois,
+            distance: distance,
             active: false
         };
         await this.db.collection(DB.ROUTES).insertOne(query);
     }
 
-    async editRoute(routeId, name, description, descriptionEnd, color, checkpoints, routingPoints, pois)
+    async editRoute(routeId, name, description, descriptionEnd, color, checkpoints, routingPoints, pois, distance)
     {
 
         //POIS: {latlng: [lat, lng], title: "Zwischenkundgebung", description: "Kurze Beschreibung"}
@@ -162,6 +163,7 @@ class Database {
             color: color,
             checkpoints: checkpoints,
             routingPoints: routingPoints,
+            distance: distance,
             pois: pois
         };
         let route = await this.db.collection(DB.ROUTES).findOneAndUpdate({_id: routeId}, {$set: query}, {returnOriginal: false});

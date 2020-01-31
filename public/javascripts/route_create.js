@@ -8,6 +8,7 @@ let checkpoints = [];
 let route;
 let control;
 let poiMarkers = {};
+let distance = 0;
 
 //Mögliche Routen Farben
 const colors = ["red", "green", "blue", "violet", "grey", "black", "yellow", "orange"];
@@ -82,6 +83,7 @@ function drawRoute(api) {
     let routePoints = api.features[0].geometry.coordinates;
     let routeLength = api.features[0].properties.summary.distance;
     $("#routeLength").text(Math.round(routeLength));
+    distance = Math.round(routeLength / 100) * 100;
     //Für jeden Punkt, wandel Array in JSON Objekt um
     let points = routePoints.map((e) => {return {lat: e[1], lng: e[0]}});
     //Zeichne Route mir allen Checkpoints
@@ -261,7 +263,7 @@ function saveRoute() {
     }
 
     //Füge Routen Informationen hinzu
-    var data = {name: title, description: description, descriptionEnd: descriptionEnd, color: color, pois: pois, routingpoints: routingPoints, checkpoints: checkpoints};
+    var data = {name: title, description: description, descriptionEnd: descriptionEnd, color: color, pois: pois, routingpoints: routingPoints, checkpoints: checkpoints, distance: distance};
 
     let xhr = new XMLHttpRequest();
     //Wenn RoutenID nicht gesetzt = Route erstellen

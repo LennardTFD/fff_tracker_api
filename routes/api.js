@@ -274,11 +274,12 @@ let api = (app, io, cache) => {
         let checkpoints = route.checkpoints;
         let routingpoints = route.routingpoints;
         let pois = route.pois;
+        let distance = route.distance;
 
         res.status(200);
         res.type("json");
         await db.connect().then(async () => {
-            return await db.createRoute(name, description, descriptionEnd, color, checkpoints, routingpoints, pois);
+            return await db.createRoute(name, description, descriptionEnd, color, checkpoints, routingpoints, pois, distance);
         });
 
         cache.cache = Object.assign(cache.cache, {
@@ -300,13 +301,12 @@ let api = (app, io, cache) => {
         let checkpoints = route.checkpoints;
         let routingpoints = route.routingpoints;
         let pois = route.pois;
-
-
+        let distance = route.distance;
 
         res.status(200);
         res.type("json");
         let rt = await db.connect().then(async () => {
-            return await db.editRoute(parseInt(req.params.routeId), name, description, descriptionEnd, color, checkpoints, routingpoints, pois);
+            return await db.editRoute(parseInt(req.params.routeId), name, description, descriptionEnd, color, checkpoints, routingpoints, pois, distance);
         });
 
         cache.cache = Object.assign(cache.cache, {
