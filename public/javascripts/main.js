@@ -205,7 +205,7 @@ function drawRouteByCoords(route) {
     const mapsUrlStart = "https://maps.google.com/?q=" + checkpoints[0].lat + "," + checkpoints[0].lng;
     let startMarker = L.marker(checkpoints[0], {icon: greenIcon}).addTo(map);
     startMarker.bindPopup("<b>Start</b><br><p>" + descriptionStart + "</p><i>Länge: " + route.distance + "m</i><br><a target='_blank' href='" + mapsUrlStart + "' style='vertical-align: middle;'><img src=\"https://img.icons8.com/color/48/000000/google-maps.png\" style='width: 22px;vertical-align: middle;'>Navigation starten</a>");
-    const mapsUrlEnd = "https://maps.google.com/?q=" + checkpoints[checkpoints.length - 1][0] + "," + checkpoints[checkpoints.length - 1][1];
+    const mapsUrlEnd = "https://maps.google.com/?q=" + checkpoints[checkpoints.length - 1].lat + "," + checkpoints[checkpoints.length - 1].lng;
     let endMarker = L.marker(checkpoints[checkpoints.length - 1], {icon: redIcon}).addTo(map);
     endMarker.bindPopup("<b>Ende</b><br><p>" + descriptionEnd + "</p><i>Länge: " + route.distance + "m</i><br><img src=\"https://img.icons8.com/color/48/000000/google-maps.png\" style='width: 22px;vertical-align: middle;'><a target='_blank' href='" + mapsUrlEnd + "' style='vertical-align: middle;'>Navigation starten</a>");
 }

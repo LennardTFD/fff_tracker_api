@@ -60,7 +60,7 @@ TODO Route Length in Route Data
   <a href="https://duesseldorf4future.de/">Finde uns hier im Web</a>
   created by Lennard Giesing
 </div>
-<div id="adminPanel" style="z-index: 9999998">
+<div id="adminPanel" style="z-index: 9999998; <%if(embed){%>display:none<%}%>">
   <a href="#" onclick="hideShowLegend()">Legende</a>
   <span style="display: <%if(loggedin){%>inline<%}else{%>none<%}%>">
   <a href="/route" title="Demorouten">Demorouten</a>
