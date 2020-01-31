@@ -46,7 +46,7 @@ async function calcRoute() {
     coordString = coordString.slice(0, -1);
     //Erstelle URL mit Query String
     //var url = "https://api.openrouteservice.org/directions?coordinates=" + coordString + "&instructions=false&instructions_format=text&geometry_format=geojson&preference=shortest&units=m&profile=cycling-road&api_key=58d904a497c67e00015b45fc4f1ca5bb772b4a179eb9de97a5f03f5e";
-    var url = "https://api.openrouteservice.org/v2/directions/cycling-road/geojson";
+    var url = "https://api.openrouteservice.org/v2/directions/foot-walking/geojson";
     var details = {"coordinates": coordArray, "units": "m", "instructions": false};
     //Lies Route aus ORS API
     getRouting(url, details);
