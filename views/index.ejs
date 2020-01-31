@@ -2,6 +2,7 @@
 <!--
 Created by Lennard Giesing
 https://github.com/LennardTFD
+TODO Route Length in Route Data
 -->
 <html style="height: 100%;" lang="de">
 <head>
@@ -59,10 +60,13 @@ https://github.com/LennardTFD
   <a href="https://duesseldorf4future.de/">Finde uns hier im Web</a>
   created by Lennard Giesing
 </div>
-<div id="adminPanel" style="z-index: 9999998; display: <%if(loggedin){%>block<%}else{%>none<%}%>">
+<div id="adminPanel" style="z-index: 9999998">
+  <a href="#" onclick="hideShowLegend()">Legende</a>
+  <span style="display: <%if(loggedin){%>block<%}else{%>none<%}%>">
   <a href="/route" title="Demorouten">Demorouten</a>
   <a href="/march" title="Demozüge">Demozüge</a>
   <a href="/logout" title="Logout">Logout</a>
+  </span>
 </div>
 <div id='legende' style="z-index: 9999999; <%if(embed){%>display:none<%}%>">
 
@@ -74,6 +78,17 @@ https://github.com/LennardTFD
 
 
   <script>
+    function hideShowLegend()
+    {
+      if($("#legende").css("display") == "none")
+      {
+        $("#legende").css("display", "");
+      }
+      else
+      {
+        $("#legende").css("display", "none");
+      }
+    }
     $(".blackMarker:eq(0)").attr("src", blackIcon.options.iconUrl);
     $(".greenMarker:eq(0)").attr("src", greenIcon.options.iconUrl);
     $(".redMarker:eq(0)").attr("src", redIcon.options.iconUrl);
