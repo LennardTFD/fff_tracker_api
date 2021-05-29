@@ -209,7 +209,7 @@ function drawRouteByCoords(route) {
     let endMarker = L.marker(checkpoints[checkpoints.length - 1], {icon: redIcon}).addTo(map);
     endMarker.bindPopup("<b>Ende</b><br><p>" + descriptionEnd + "</p><i>Länge: " + route.distance + "m</i><br><img src=\"https://img.icons8.com/color/48/000000/google-maps.png\" style='width: 22px;vertical-align: middle;'><a target='_blank' href='" + mapsUrlEnd + "' style='vertical-align: middle;'>Navigation starten</a>");
 }
-analytics();
+//analytics();
 init();
 
 /*
